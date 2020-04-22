@@ -43,8 +43,8 @@
 	[wiki - STUN](https://en.wikipedia.org/wiki/STUN)
 	[RFC 3489 - STUN - Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs)](https://tools.ietf.org/html/rfc3489).   
 	[RFC 5389 - Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5389).   
-	[RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5766).   
 	[RFC5389_NAT 的会话穿透用法 (STUN)](rfc-chinese/RFC5389_NAT的会话穿透用法(STUN).pdf)   
+	[P2P技术简介-NAT（ Network Address Translation）穿越（俗称打洞）技术](https://www.cnblogs.com/vc60er/p/6916190.html)    
 
 - **TURN**.   
 	Traversal Using Relays around NAT (TURN) is a protocol that assists in traversal of network address translators (NAT) or firewalls for multimedia applications. It may be used with the Transmission Control Protocol (TCP) and User Datagram Protocol (UDP). It is most useful for clients on networks masqueraded by symmetric NAT devices. TURN does not aid in running servers on well known ports in the private network through a NAT;   
@@ -113,34 +113,70 @@
 	[wiki - MPEG transport stream](https://en.wikipedia.org/wiki/MPEG_transport_stream)
 
 
-## 网络容错
-- **FEC**
-	[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)
-- **jitter**
-- **synchronize**
+## 传输控制
+- **GCC**  
+	[webrtc-gcc](https://www.freehacker.cn/media/webrtc-gcc/)
+	
+- **BBR**  
+	BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，输出为拥塞窗口(congestion_window)发送速度(pacing_rate)。
+	[BBR: Congestion-Based Congestion Control](https://queue.acm.org/detail.cfm?id=3022184)
+	[来自Google的TCP BBR拥塞控制算法解析](https://blog.csdn.net/dog250/article/details/52830576)
+	[TCP BBR拥塞控制算法解析](https://blog.csdn.net/ebay/article/details/76252481)
+
+- **PCC**  
+
+- **NACK**
+	[Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))
+
+- **QUIC**
+	[wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)
+
+- **ARQ**
+	[Automatic repeat request](https://en.wikipedia.org/wiki/ARQ_(film))
+	[重要的事情说三遍：ARQ协议](https://sexywp.com/introduction-of-arq.htm)
+
+- **jitter**  
+
+- **synchronize**  
+
+- **RS**   
+	[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)  
 
 
-## 语音增强
-- **AEC**
-- **NS**
-- **AGC**
+
+
+## 语音增强  
+- **AEC**  
+- **NS**  
+- **AGC**  
 
 
 ## 视频编码器
+- **yuv**  
+	[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)   
 - **H.264/avc**   
-	[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
+	[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)  
+	[codec-h264](https://www.freehacker.cn/media/codec-h264/)  
 - **h.265/hevc**  
-- **vp8***
+- **vp8**  
+
 
 ## 音频编码器
-- **iLBC**
-- **ACC**
+- **iLBC**  
+	[Internet Low Bitrate Codec](https://en.wikipedia.org/wiki/Internet_Low_Bitrate_Codec)  
+
+- **ACC**  
+	[Advanced Audio Coding](https://en.wikipedia.org/wiki/Advanced_Audio_Coding)  
+- **opus**  
+	[Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
+
+
+
 
 ## 参考
 - [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
 - [webrtc-architecture-protocols](https://princiya777.wordpress.com/2017/08/19/webrtc-architecture-protocols)
 - [webrtcglossary.com](https://webrtcglossary.com/)
-
 
 
 
