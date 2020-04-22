@@ -14,8 +14,8 @@
 	[RFC5124 - Extended Secure RTP Profile for Real-time Transport Control Protocol (RTCP)-Based Feedback (RTP/SAVPF) ](https://tools.ietf.org/html/rfc5124).  
 	[RFC7741 - RTP Payload Format for VP8 Video](https://tools.ietf.org/html/rfc7741).  
 	[RFC6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184).  
-	[RFC 5450 - Transmission Time Offsets in RTP Streams](https://tools.ietf.org/html/rfc5450).  
-	[RFC 5104 - Codec Control Messages in the RTP Audio-Visual Profile with Feedback (AVPF) ](https://tools.ietf.org/html/rfc5104).  
+	[RFC5450 - Transmission Time Offsets in RTP Streams](https://tools.ietf.org/html/rfc5450).  
+	[RFC5104 - Codec Control Messages in the RTP Audio-Visual Profile with Feedback (AVPF) ](https://tools.ietf.org/html/rfc5104).  
 	[RFC3550-RTP协议](rfc-chinese/RFC3550-RTP协议.pdf)     
 	[RFC3550-RTP应用于实时应用的传输协议](rfc-chinese/RFC3550-RTP应用于实时应用的传输协议.pdf)     
 
@@ -30,8 +30,8 @@
 
 	[wiki: Interactive_Connectivity_Establishment](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)
 	[RFC 5245: Interactive Connectivity Establishment (ICE): A Protocol for NAT Traversal for Offer/Answer Protocols](https://tools.ietf.org/html/rfc5245).   
-	[RFC 6544: TCP Candidates with Interactive Connectivity Establishment (ICE)](https://tools.ietf.org/html/rfc6544).  
-	[RFC 8445: Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal](https://tools.ietf.org/html/rfc6544)
+	[RFC6544: TCP Candidates with Interactive Connectivity Establishment (ICE)](https://tools.ietf.org/html/rfc6544).  
+	[RFC8445: Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal](https://tools.ietf.org/html/rfc6544)
 
 
 
@@ -42,27 +42,27 @@
 
 	[wiki - STUN](https://en.wikipedia.org/wiki/STUN)
 	[RFC 3489 - STUN - Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs)](https://tools.ietf.org/html/rfc3489).   
-	[RFC 5389 - Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5389).   
+	[RFC5389 - Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5389).   
 	[RFC5389_NAT 的会话穿透用法 (STUN)](rfc-chinese/RFC5389_NAT的会话穿透用法(STUN).pdf)   
 	[P2P技术简介-NAT（ Network Address Translation）穿越（俗称打洞）技术](https://www.cnblogs.com/vc60er/p/6916190.html)    
 
 - **TURN**.   
 	Traversal Using Relays around NAT (TURN) is a protocol that assists in traversal of network address translators (NAT) or firewalls for multimedia applications. It may be used with the Transmission Control Protocol (TCP) and User Datagram Protocol (UDP). It is most useful for clients on networks masqueraded by symmetric NAT devices. TURN does not aid in running servers on well known ports in the private network through a NAT;   
 
-	[wiki - Traversal_Using_Relays_around_NAT](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT)
+	[wiki - Traversal_Using_Relays_around_NAT](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT)   
 	[RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5766).  
 
 - **SDP**   
 	The Session Description Protocol (SDP) is a format for describing multimedia communication sessions for the purposes of session announcement and session invitation.[1] Its predominant use is in support of streaming media applications, such as voice over IP (VoIP) and video conferencing. SDP does not deliver any media streams itself, but is used between endpoints for negotiation of network metrics, media types, and other associated properties. The set of properties and parameters are often called a session profile.
 
 	[wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)   
-	[RFC 4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).  
+	[RFC4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).  
 
 - **DTLS**   
 	Datagram Transport Layer Security. DTLS is used to secure all data transfers between peers; encryption is a mandatory feature of WebRTC.
 
 	[wiki: Datagram_Transport_Layer_Security](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)   
-	[RFC 6347 - Datagram Transport Layer Security Version 1.2](https://tools.ietf.org/html/rfc6347)    
+	[RFC6347 - Datagram Transport Layer Security Version 1.2](https://tools.ietf.org/html/rfc6347)    
 
 
 - **SRTP**.  
@@ -74,8 +74,26 @@
 
 
 - **SCTP**.  
-	Stream Control Transport Protocol. SCTP is designed to transport Public Switched Telephone Network (PSTN) signaling messages over IP networks, but is capable of broader applications.   
-	[RFC 4960 - Stream Control Transmission Protocol](https://tools.ietf.org/html/rfc4960)
+	Stream Control Transport Protocol. 
+
+	SCTP as a protocol can be seen as a hybrid of UDP and TCP.
+
+	At its core, SCTP holds the following characteristics:
+
+	Connection oriented. Similar to TCP, SCTP is connection oriented. It also offers a multi-homing capability that isn’t used by WebRTC
+	Optional reliability. Reliability is optional in SCTP and is up to the implementer using SCTP to decide if he needs this capability or not
+	Optional ordering. Ordering of packets sent via SCTP is optional and is left for the implementer to decide if this is necessary for him or not
+	Message oriented. SCTP makes sure that each message sent is properly parsed on the receiver end in the same manner in which it was sent
+	Flow control. Similar to TCP, SCTP provides a flow control mechanism that makes sure the network doesn’t get congested
+	SCTP is not implemented by all operating systems. In such cases, an application level implementation of SCTP will usually be used.
+
+	SCTP is used in WebRTC for the implementation and delivery of the Data Channel.
+
+	Google is experimenting with the QUIC protocol as a future replacement to SCTP.
+
+	SCTP is designed to transport Public Switched Telephone Network (PSTN) signaling messages over IP networks, but is capable of broader applications.
+
+	[RFC4960 - Stream Control Transmission Protocol](https://tools.ietf.org/html/rfc4960)
 
 
 - **RTMP**  
@@ -115,23 +133,31 @@
 
 ## 传输控制
 - **GCC**  
-	[webrtc-gcc](https://www.freehacker.cn/media/webrtc-gcc/)
+	[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)
+	[WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)
 	
 - **BBR**  
 	BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，输出为拥塞窗口(congestion_window)发送速度(pacing_rate)。
 	[BBR: Congestion-Based Congestion Control](https://queue.acm.org/detail.cfm?id=3022184)
 	[来自Google的TCP BBR拥塞控制算法解析](https://blog.csdn.net/dog250/article/details/52830576)
-	[TCP BBR拥塞控制算法解析](https://blog.csdn.net/ebay/article/details/76252481)
+	[TCP BBR拥塞控制算法解析](https://blog.csdn.net/ebay/article/details/76252481)   
+	[Linux Kernel 4.9 中的 BBR 算法与之前的 TCP 拥塞控制相比有什么优势](https://www.zhihu.com/question/53559433)   
+	[一文解释清楚GOOGLE BBR拥塞控制算法原理]https://www.taohui.pub/2019/08/07/%e4%b8%80%e6%96%87%e8%a7%a3%e9%87%8a%e6%b8%85%e6%a5%9agoogle-bbr%e6%8b%a5%e5%a1%9e%e6%8e%a7%e5%88%b6%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86/
+	[BBR及其在实时音视频领域的应用](https://mp.weixin.qq.com/s/8Hy5SBWXzhZ2X4YnjFflJw)   
+
 
 - **PCC**  
 
-- **NACK**
+- **NACK**  
 	[Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))
+	[RFC4588 - RTP Retransmission Payload Format](https://tools.ietf.org/html/rfc4588)
+	[LearningWebRTC: NACK(Negative ACKnowledgement)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-nack/)
 
-- **QUIC**
+
+- **QUIC**  
 	[wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)
 
-- **ARQ**
+- **ARQ**  
 	[Automatic repeat request](https://en.wikipedia.org/wiki/ARQ_(film))
 	[重要的事情说三遍：ARQ协议](https://sexywp.com/introduction-of-arq.htm)
 
@@ -139,26 +165,47 @@
 
 - **synchronize**  
 
+- **FEC**   
+	[LearningWebRTC: FEC(Forward Error Correction)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-fec/)   
+	[draft-ietf-payload-flexible-fec-scheme-05 - RTP Payload Format for Flexible Forward Error Correction (FEC)](https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)   
+	[RFC 5109 - RTP Payload Format for Generic Forward Error Correction](https://tools.ietf.org/html/rfc5109)   
+
 - **RS**   
 	[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)  
 
 
 
-
 ## 语音增强  
 - **AEC**  
+[LearningWebRTC: AECM](https://xjsxjtu.github.io/2017-07-05/LearningWebRTC-apm_aecm/)  
 - **NS**  
-- **AGC**  
+- **AGC** 
+- **VAD**   
+
+
+
 
 
 ## 视频编码器
+- **H.264/avc**   
+	[wiki - Advanced Video Coding](https://en.wikipedia.org/wiki/Advanced_Video_Coding)  
+	[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)	[codec-h264](https://www.freehacker.cn/media/codec-h264/)  
+	[rfc6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184)  
+	[rfc6190 - RTP Payload Format for Scalable Video Coding](https://tools.ietf.org/html/rfc6190)	
+
+- **h.265/hevc**  
+
+- **vp8**  
+
 - **yuv**  
 	[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)   
-- **H.264/avc**   
-	[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)  
-	[codec-h264](https://www.freehacker.cn/media/codec-h264/)  
-- **h.265/hevc**  
-- **vp8**  
+
+- **SVC**   
+	[SVC和视频通信](https://www.zego.im/article/2018/03/07/svc%e5%92%8c%e8%a7%86%e9%a2%91%e9%80%9a%e4%bf%a1/)   
+	[在Google Chrome WebRTC中分层蛋糕式的VP9 SVC](https://www.zego.im/article/2018/02/26/%E5%9C%A8google-chrome-webrtc%E4%B8%AD%E5%88%86%E5%B1%82%E8%9B%8B%E7%B3%95%E5%BC%8F%E7%9A%84vp9-svc/)   
+	[姜健：VP9可适性视频编码（SVC）新特性](https://mp.weixin.qq.com/s/PN91H_bFQ2X_ySiMGxGK5A?utm_source=tuicool&utm_medium=referral)   
+	[H264 SVC：从编码到RTP打包](https://xjsxjtu.github.io/2017-06-24/H264-SVC/)   
+
 
 
 ## 音频编码器
@@ -167,8 +214,12 @@
 
 - **ACC**  
 	[Advanced Audio Coding](https://en.wikipedia.org/wiki/Advanced_Audio_Coding)  
-- **opus**  
-	[Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
+
+- **opus**   
+	Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK主要负责wideband(8khz)以下的语音编码，CELT主要负责高频编码，如音乐等。    
+	[wiki - Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
+	[RFC7587 - RTP Payload Format for the Opus Speech and Audio Codec](https://tools.ietf.org/html/rfc7587)
+	[RFC6716 - Definition of the Opus Audio Codec](https://tools.ietf.org/html/rfc6716)
 
 
 
