@@ -16,14 +16,18 @@
 	[RFC6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184).  
 	[RFC 5450 - Transmission Time Offsets in RTP Streams](https://tools.ietf.org/html/rfc5450).  
 	[RFC 5104 - Codec Control Messages in the RTP Audio-Visual Profile with Feedback (AVPF) ](https://tools.ietf.org/html/rfc5104).  
+	[RFC3550-RTP协议](rfc-chinese/RFC3550-RTP协议.pdf)     
+	[RFC3550-RTP应用于实时应用的传输协议](rfc-chinese/RFC3550-RTP应用于实时应用的传输协议.pdf)     
 
 - **RTCP**  
 	The RTP Control Protocol (RTCP) is a sister protocol of the Real-time Transport Protocol (RTP). Its basic functionality and packet structure is defined in RFC 3550. RTCP provides out-of-band statistics and control information for an RTP session. It partners with RTP in the delivery and packaging of multimedia data, but does not transport any media data itself.  
+	
 	[wiki - RTP Control Protocol](https://en.wikipedia.org/wiki/RTP_Control_Protocol)   
 	[RFC3550 - RTP: A Transport Protocol for Real-Time Applications](https://tools.ietf.org/html/rfc3550).  
 
 - **ICE**  
 	Interactive Connectivity Establishment (ICE) is a technique used in computer networking to find ways for two computers to talk to each other as directly as possible in peer-to-peer networking. This is most commonly used for interactive media such as Voice over Internet Protocol (VoIP), peer-to-peer communications, video, and instant messaging. In such applications, you want to avoid communicating through a central server (which would slow down communication, and be expensive), but direct communication between client applications on the Internet is very tricky due to network address translators (NATs), firewalls, and other network barriers.  
+
 	[wiki: Interactive_Connectivity_Establishment](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)
 	[RFC 5245: Interactive Connectivity Establishment (ICE): A Protocol for NAT Traversal for Offer/Answer Protocols](https://tools.ietf.org/html/rfc5245).   
 	[RFC 6544: TCP Candidates with Interactive Connectivity Establishment (ICE)](https://tools.ietf.org/html/rfc6544).  
@@ -35,10 +39,12 @@
 	Session Traversal Utilities for NAT (STUN) is a standardized set of methods, including a network protocol, for traversal of network address translator (NAT) gateways in applications of real-time voice, video, messaging, and other interactive communications. 
 
 	STUN is a tool used by other protocols, such as Interactive Connectivity Establishment (ICE), the Session Initiation Protocol (SIP), or WebRTC. It provides a tool for hosts to discover the presence of a network address translator, and to discover the mapped, usually public, Internet Protocol (IP) address and port number that the NAT has allocated for the application's User Datagram Protocol (UDP) flows to remote hosts. The protocol requires assistance from a third-party network server (STUN server) located on the opposing (public) side of the NAT, usually the public Internet.   
+
 	[wiki - STUN](https://en.wikipedia.org/wiki/STUN)
 	[RFC 3489 - STUN - Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs)](https://tools.ietf.org/html/rfc3489).   
 	[RFC 5389 - Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5389).   
-	[RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5766). 
+	[RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5766).   
+	[RFC5389_NAT 的会话穿透用法 (STUN)](rfc-chinese/RFC5389_NAT 的会话穿透用法 (STUN).pdf)   
 
 - **TURN**.   
 	Traversal Using Relays around NAT (TURN) is a protocol that assists in traversal of network address translators (NAT) or firewalls for multimedia applications. It may be used with the Transmission Control Protocol (TCP) and User Datagram Protocol (UDP). It is most useful for clients on networks masqueraded by symmetric NAT devices. TURN does not aid in running servers on well known ports in the private network through a NAT;   
@@ -52,7 +58,7 @@
 	[wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)   
 	[RFC 4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).  
 
-- **DTLS**
+- **DTLS**   
 	Datagram Transport Layer Security. DTLS is used to secure all data transfers between peers; encryption is a mandatory feature of WebRTC.
 
 	[wiki: Datagram_Transport_Layer_Security](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)   
@@ -77,7 +83,8 @@
 	[wiki - Real-Time Messaging Protocol](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
 - **RTSP**  
-	While similar in some ways to HTTP, RTSP defines control sequences useful in controlling multimedia playback. While HTTP is stateless, RTSP has state; an identifier is used when needed to track concurrent sessions. Like HTTP, RTSP uses TCP to maintain an end-to-end connection and, while most RTSP control messages are sent by the client to the server, some commands travel in the other direction (i.e. from server to client).   
+	While similar in some ways to HTTP, RTSP defines control sequences useful in controlling multimedia playback. While HTTP is stateless, RTSP has state; an identifier is used when needed to track concurrent sessions. Like HTTP, RTSP uses TCP to maintain an end-to-end connection and, while most RTSP control messages are sent by the client to the server, some commands travel in the other direction (i.e. from server to client).  
+
 	[wiki - https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol](https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol)  
 
 - **HLS**  
@@ -93,6 +100,7 @@
 ## 容器
 - **mp4**.     
 	MPEG-4 Part 14 or MP4 is a digital multimedia container format most commonly used to store video and audio, but it can also be used to store other data such as subtitles and still images.[2] Like most modern container formats, it allows streaming over the Internet. The only official filename extension for MPEG-4 Part 14 files is .mp4. MPEG-4 Part 14 (formally ISO/IEC 14496-14:2003) is a standard specified as a part of MPEG-4.  
+
 	[wiki - MPEG-4_Part_14](https://en.wikipedia.org/wiki/MPEG-4_Part_14)
 
 - **ts**.  
@@ -101,29 +109,32 @@
 	Transport stream specifies a container format encapsulating packetized elementary streams, with error correction and synchronization pattern features for maintaining transmission integrity when the communication channel carrying the stream is degraded.  
 
 	Transport streams differ from the similarly-named MPEG program stream in several important ways: program streams are designed for reasonably reliable media, such as discs (like DVDs), while transport streams are designed for less reliable transmission, namely terrestrial or satellite broadcast. Further, a transport stream may carry multiple programs.
-	
+
 	[wiki - MPEG transport stream](https://en.wikipedia.org/wiki/MPEG_transport_stream)
 
 
 ## 网络容错
-- FEC
-- jitter
-- synchronize
+- **FEC**
+	[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)
+- **jitter**
+- **synchronize**
 
 
 ## 语音增强
-- AEC
-- NS
+- **AEC**
+- **NS**
+- **AGC**
+
 
 ## 视频编码器
-- H.264/avc.  
-[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
-- h.265/hevc
-- vp8
+- **H.264/avc**   
+	[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
+- **h.265/hevc**  
+- **vp8***
 
 ## 音频编码器
-- iLBC
-- acc
+- **iLBC**
+- **ACC**
 
 ## 参考
 - [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
