@@ -137,12 +137,12 @@
 	[WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)
 	
 - **BBR**  
-	BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，输出为拥塞窗口(congestion_window)发送速度(pacing_rate)。
-	[BBR: Congestion-Based Congestion Control](https://queue.acm.org/detail.cfm?id=3022184)
-	[来自Google的TCP BBR拥塞控制算法解析](https://blog.csdn.net/dog250/article/details/52830576)
-	[TCP BBR拥塞控制算法解析](https://blog.csdn.net/ebay/article/details/76252481)   
+	BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，输出为拥塞窗口(congestion_window)发送速度(pacing_rate)。  
+	[BBR: Congestion-Based Congestion Control](https://queue.acm.org/detail.cfm?id=3022184)  
+	[来自Google的TCP BBR拥塞控制算法解析](https://blog.csdn.net/dog250/article/details/52830576)  
+	[TCP BBR拥塞控制算法解析](https://blog.csdn.net/ebay/article/details/76252481)     
 	[Linux Kernel 4.9 中的 BBR 算法与之前的 TCP 拥塞控制相比有什么优势](https://www.zhihu.com/question/53559433)   
-	[一文解释清楚GOOGLE BBR拥塞控制算法原理]https://www.taohui.pub/2019/08/07/%e4%b8%80%e6%96%87%e8%a7%a3%e9%87%8a%e6%b8%85%e6%a5%9agoogle-bbr%e6%8b%a5%e5%a1%9e%e6%8e%a7%e5%88%b6%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86/
+	[一文解释清楚GOOGLE BBR拥塞控制算法原理](https://www.taohui.pub/2019/08/07/%e4%b8%80%e6%96%87%e8%a7%a3%e9%87%8a%e6%b8%85%e6%a5%9agoogle-bbr%e6%8b%a5%e5%a1%9e%e6%8e%a7%e5%88%b6%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86/)  
 	[BBR及其在实时音视频领域的应用](https://mp.weixin.qq.com/s/8Hy5SBWXzhZ2X4YnjFflJw)   
 
 
