@@ -133,8 +133,12 @@
 
 ## 传输控制
 - **GCC**  
-	[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)
-	[WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)
+	[A Google Congestion Control Algorithm for Real-Time Communication draft-ietf-rmcat-gcc-02](https://tools.ietf.org/html/draft-ietf-rmcat-gcc-02)  
+	[小议WebRTC拥塞控制算法：GCC介绍](小议WebRTC拥塞控制算法：GCC介绍)  
+	[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
+	[WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)  
+	[Analysis and Design of the Google Congestion Control for Web Real-time Communication (WebRTC)](https://c3lab.poliba.it/images/6/65/Gcc-analysis.pdf)   
+
 	
 - **BBR**  
 	BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，输出为拥塞窗口(congestion_window)发送速度(pacing_rate)。  
@@ -147,15 +151,20 @@
 
 
 - **PCC**  
+	[PCC: Performance-oriented Congestion Control](https://modong.github.io/pcc-page/)   
+
 
 - **NACK**  
-	[Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))
-	[RFC4588 - RTP Retransmission Payload Format](https://tools.ietf.org/html/rfc4588)
-	[LearningWebRTC: NACK(Negative ACKnowledgement)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-nack/)
+	[Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))   
+	[RFC4588 - RTP Retransmission Payload Format](https://tools.ietf.org/html/rfc4588)   
+	[LearningWebRTC: NACK(Negative ACKnowledgement)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-nack/)   
 
 
 - **QUIC**  
-	[wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)
+	[wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)   
+	[Official Google description:](https://www.chromium.org/quic)   
+	[Inofficial standalone library maintained by official QUIC developers](https://github.com/google/proto-quic)   
+	[Good introduction read-up with comment from Jim Roskind (QUIC architect)](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)   
 
 - **ARQ**  
 	[Automatic repeat request](https://en.wikipedia.org/wiki/ARQ_(film))
@@ -167,12 +176,11 @@
 
 - **FEC**   
 	[LearningWebRTC: FEC(Forward Error Correction)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-fec/)   
-	[draft-ietf-payload-flexible-fec-scheme-05 - RTP Payload Format for Flexible Forward Error Correction (FEC)](https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)   
+	[RTP Payload Format for Flexible Forward Error Correction (FEC) - draft-ietf-payload-flexible-fec-scheme-05](https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)   
 	[RFC 5109 - RTP Payload Format for Generic Forward Error Correction](https://tools.ietf.org/html/rfc5109)   
 
 - **RS**   
 	[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)  
-
 
 
 ## 语音增强  
@@ -223,11 +231,12 @@
 
 
 
+## 工具
 
-## 参考
-- [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)
+
+
+## 资源
 - [webrtc-architecture-protocols](https://princiya777.wordpress.com/2017/08/19/webrtc-architecture-protocols)
 - [webrtcglossary.com](https://webrtcglossary.com/)
-
 
 
