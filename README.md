@@ -134,7 +134,7 @@
 ## 传输控制
 - **GCC**  
 	[A Google Congestion Control Algorithm for Real-Time Communication draft-ietf-rmcat-gcc-02](https://tools.ietf.org/html/draft-ietf-rmcat-gcc-02)  
-	[小议WebRTC拥塞控制算法：GCC介绍](小议WebRTC拥塞控制算法：GCC介绍)  
+	[小议WebRTC拥塞控制算法：GCC介绍](http://yunxin.163.com/blog/video18-0905/)  
 	[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
 	[WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)  
 	[Analysis and Design of the Google Congestion Control for Web Real-time Communication (WebRTC)](https://c3lab.poliba.it/images/6/65/Gcc-analysis.pdf)   
@@ -206,14 +206,24 @@
 - **vp8**  
 
 - **yuv**  
-	[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)   
+	[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)    
+	[视频像素格式](https://wikipedia.freehacker.cn/auvi/video-pixel-format.html)   
+	[[翻译]H.264 探索 第一部分 色彩模型](https://segmentfault.com/a/1190000006695679)   
 
 - **SVC**   
 	[SVC和视频通信](https://www.zego.im/article/2018/03/07/svc%e5%92%8c%e8%a7%86%e9%a2%91%e9%80%9a%e4%bf%a1/)   
 	[在Google Chrome WebRTC中分层蛋糕式的VP9 SVC](https://www.zego.im/article/2018/02/26/%E5%9C%A8google-chrome-webrtc%E4%B8%AD%E5%88%86%E5%B1%82%E8%9B%8B%E7%B3%95%E5%BC%8F%E7%9A%84vp9-svc/)   
 	[姜健：VP9可适性视频编码（SVC）新特性](https://mp.weixin.qq.com/s/PN91H_bFQ2X_ySiMGxGK5A?utm_source=tuicool&utm_medium=referral)   
 	[H264 SVC：从编码到RTP打包](https://xjsxjtu.github.io/2017-06-24/H264-SVC/)   
+	[H.264 SVC](https://www.cnblogs.com/huxiaopeng/p/5653310.html)   
 
+- **x264编码器参数**   
+	[H.264 Video Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.264)   
+	[x264参数中文详解（X264 Settings）](https://www.cnblogs.com/lihaiping/p/4037470.html)   
+	[H264编码常用参数整理](https://blog.csdn.net/yuangc/article/details/86678247)   
+	[FFmpeg使用X264编码参数](http://blog.gqylpy.com/gqy/22748/)  
+	[ffmpeg与H264编码指南](https://www.cnblogs.com/tocy/p/ffmpeg_h264_encode_guide.html)  
+	[(转)x264参数中文详解（X264 Settings）](https://www.cnblogs.com/lihaiping/p/4037470.html)  
 
 
 ## 音频编码器
