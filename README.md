@@ -66,11 +66,244 @@ RTP typically runs over User Datagram Protocol (UDP). RTP is used in conjunction
 [RFC3550-RTP协议](rfc-chinese/RFC3550-RTP协议.pdf)  
 [RFC3550-RTP应用于实时应用的传输协议](rfc-chinese/RFC3550-RTP应用于实时应用的传输协议.pdf)  
 
+
+
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|V=2|P|X|  CC   |M|     PT      |       sequence number         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           timestamp                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           synchronization source (SSRC) identifier            |
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+|            contributing source (CSRC) identifiers             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          payload  ...                         |
+|                               +-------------------------------+
+|                               | RTP padding   | RTP pad count |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+- PT (Payload Type)
+
+Identifies the format of the RTP payload. In essence, a Payload Type is an integer number that maps to a previously defined encoding, including clock rate, codec type, codec settings, number of channels (in the case of audio), etc. All this information is needed by the receiver in order to decode the stream.
+
+Originally, the standard provided some predefined Payload Types for commonly used encoding formats at the time. For example, the Payload Type 34 corresponds to the H.263 video codec. More predefined values can be found in [RFC 3551](https://tools.ietf.org/html/rfc3551):
+
+```
+PT      encoding    media type  clock rate
+        name                    (Hz)
+_____________________________________________
+24      unassigned  V
+25      CelB        V           90,000
+26      JPEG        V           90,000
+27      unassigned  V
+28      nv          V           90,000
+29      unassigned  V
+30      unassigned  V
+31      H261        V           90,000
+32      MPV         V           90,000
+33      MP2T        AV          90,000
+34      H263        V           90,000
+35-71   unassigned  ?
+72-76   reserved    N/A         N/A
+77-95   unassigned  ?
+96-127  dynamic     ?
+dyn     H263-1998   V           90,000
+```
+
+Nowadays, instead of using a table of predefined numbers, applications can define their own Payload Types on the fly, and share them ad-hoc between senders and receivers of the RTP streams. These Payload Types are called dynamic, and are always chosen to be any number in the range [96-127].
+
+An example: in a typical WebRTC session, Chrome might decide that the Payload Type 96 will correspond to the video codec VP8, PT 98 will be VP9, and PT 102 will be H.264. The receiver, after getting an RTP packet and inspecting the Payload Type field, will be able to know what decoder should be used to successfully handle the media.
+
+- sequence number
+
+This starts as an arbitrary random number, which then increments by one for each RTP data packet sent. Receivers can use these numbers to detect packet loss and to sort packets in case they are received out of order.
+
+- timestamp
+
+Again, this starts being an arbitrary random number, and then grows monotonically at the speed given by the media clock rate (defined by the Payload Type). Represents the instant of time when the media source was packetized into the RTP packet; the protocol doesn't use absolute timestamp values, but it uses differences between timestamps to calculate elapsed time between packets, which allows synchronization of multiple media streams (think lip sync between video and audio tracks), and also to calculate network latency and jitter.
+
+- SSRC (Synchronization Source)
+
+Another random number, it identifies the media track (e.g. one single video, or audio) that is being transmitted. Every individual media will have its own identifier, in the form of a unique SSRC shared during the RTP session. Receivers are able to easily identify to which media each RTP packet belongs by looking at the SSRC field in the packet header.
+
+ 
+
+
+
+
 ###  RTCP
 The RTP Control Protocol (RTCP) is a sister protocol of the Real-time Transport Protocol (RTP). Its basic functionality and packet structure is defined in RFC 3550. RTCP provides out-of-band statistics and control information for an RTP session. It partners with RTP in the delivery and packaging of multimedia data, but does not transport any media data itself.  
 
 [wiki - RTP Control Protocol](https://en.wikipedia.org/wiki/RTP_Control_Protocol)  
 [RFC3550 - RTP: A Transport Protocol for Real-Time Applications](https://tools.ietf.org/html/rfc3550).    
+[RTP (I): Intro to RTP and SDP](https://www.kurento.org/blog/rtp-i-intro-rtp-and-sdp)
+
+RTP is typically transmitted over UDP, where none of the TCP reliability features are present. UDP favors skipping all the safety mechanisms, giving the maximum emphasis to reduced latency, even if that means having to deal with packet loss and other typical irregular behavior of networks, such as jitter.
+
+As a means to provide some feedback to each participant in an RTP session, all of them should send Real-time Transport Control Protocol (RTCP) packets, containing some basic statistics about their part of the conversation. Peers that act as senders will send both RTP and RTCP Sender Reports, while peers that act as receivers will receive RTP and send RTCP Receiver Reports.
+
+
+These RTCP packets are sent much less frequently than the RTP packets they accompany; typically we would see one RTCP packet per second, while RTP packets are sent at a much faster rate.
+
+An RTCP packet contains very useful information about the stream:
+
+SSRCs used by each media.
+CNAME, an identifier that can be used to group several medias together.
+Different timestamps, packet counts, and jitter estimations, from senders and receivers. These statistics can then be used by each peer to detect bad conditions such as packet loss.
+Additionally, there is a set of optionally enabled extensions to the base RTCP format, that have been developed over time. These are called RTCP Feedback (RTCP-FB) messages, and can be transmitted from the receiver as long as their use has been previously agreed upon by all participants:
+
+Google REMB is part of an algorithm that aims to adapt the sender video bitrate in order to avoid issues caused by network congestion. See Kurento | Congestion Control for a quick summary on this topic.
+NACK is used by the receiver of a stream to inform the sender about packet loss. Upon receiving an RTCP NACK packet, the sender knows that it should re-send some of the RTP packets that were already sent before.
+NACK PLI (Picture Loss Indication), a way that the receiver has to tell the sender about the loss of some part of video data. Upon receiving this message, the sender should assume that the receiver will not be able to decode further intermediate frames, and a new refresh frame should be sent instead. More information in RFC 4585.
+CCM FIR (Full Intra Request), another method that the receiver has to let the sender know when a new full video frame is needed. FIR is very similar to PLI, but it's a lot more specific in requesting a full frame (also known as keyframe). More information in RFC 5104.
+These extensions are most commonly found in WebRTC implementations, helping with packet loss and other network shenanigans. However, nothing prevents that a plain RTP endpoint implements any or all of these methods, like done by Kurento's RtpEndpoint.
+
+These features might or might not be supported by both peers in an RTP session, and must be explicitly negotiated and enabled. This is typically done with the SDP negotiation, that we'll cover next.
+
+ 
+
+
+
+
+### SDP 
+The Session Description Protocol (SDP) is a format for describing multimedia communication sessions for the purposes of session announcement and session invitation.[1] Its predominant use is in support of streaming media applications, such as voice over IP (VoIP) and video conferencing. SDP does not deliver any media streams itself, but is used between endpoints for negotiation of network metrics, media types, and other associated properties. The set of properties and parameters are often called a session profile.
+
+[wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)  
+[RFC4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).    
+[](https://www.kurento.org/blog/rtp-i-intro-rtp-and-sdp)
+
+An SDP message, when generated by a participant in an RTP session, serves as an explicit description of the media that should be sent to it, from other remote peers. It's important to insist on this detail: in general (as like with everything, there are exceptions), the SDP information refers to what an RTP participant expects to receive.
+Another way to put this is that an SDP message is a request for remote senders to send their data in the format specified by the message.
+
+RFC 4566 contains the full description of all basic SDP fields. Other RFC documents were written to extend this basic format, mainly by adding new attributes (a= lines) that can be used in the media-level section of the SDP files. We'll introduce some of them as needed for our examples.
+
+
+
+Example 1: Simplest SDP
+This is an example of the most basic SDP message one can find:
+```
+v=0
+o=- 0 0 IN IP4 127.0.0.1
+s=-
+c=IN IP4 127.0.0.1
+t=0 0
+m=video 5004 RTP/AVP 96
+a=rtpmap:96 VP8/90000
+```
+It gets divided into two main sections:
+
+First 5 lines are what is called the "session-level description":
+```
+v=0
+o=- 0 0 IN IP4 127.0.0.1
+s=-
+c=IN IP4 127.0.0.1
+t=0 0
+```
+It describes things such as the peer's host IP address, time bases, and summary description. Most of these values are optional, so they can be set to zero (0) or empty strings with a dash (-).
+
+Next comes the "media-level description", consisting of a line that starts with m= and any number of additional attributes (a=) afterwards:
+```
+m=video 5004 RTP/AVP 96
+a=rtpmap:96 VP8/90000
+```
+In this example, the media-level description reads as follows:
+- There is a single video track.
+- 5004 is the local port where other peers should send RTP packets.
+- 5005 is the local port where other peers should send RTCP packets. In absence of explicit mention, the RTCP port is always calculated as the RTP port + 1.
+- RTP/AVP is the profile definition that applies to this media-level description. In this case it is RTP/AVP, as defined in RFC 3551.
+- 96 is the expected Payload Type in the incoming RTP packets.
+- VP8/90000 is the expected video codec and clock rate of the payload data, contained in the incoming RTP packets.
+ 
+
+Example 2: Annotated SDP
+SDP does not allow comments, but if it did, we could see one like this:
+```
+# Protocol version; always 0
+v=0
+
+# Originator and session identifier
+o=jdoe 2890844526 2890842807 IN IP4 224.2.17.12
+
+# Session description
+s=SDP Example
+
+# Connection information (network type and host address, like in 'o=')
+c=IN IP4 224.2.17.12
+
+# NTP timestamps for start and end of the session; can be 0
+t=2873397496 2873404696
+
+# First media: a video stream with these parameters:
+# * The RTP port is 5004
+# * The RTCP port is 5005 (implicitly by using RTP+1)
+# * Adheres to the "RTP Profile for Audio and Video" (RTP/AVP)
+# * Payload Type can be 96 or 97
+m=video 5004 RTP/AVP 96 97
+
+# Payload Type 96 encoding corresponds to VP8 codec
+a=rtpmap:96 VP8/90000
+
+# Payload Type 97 encoding corresponds to H.264 codec
+a=rtpmap:97 H264/90000
+```
+In this example we can see how the media could be ambiguously defined to use multiple Payload Types (PT). PT is the number that identifies one set of encoding properties in the RTP packet header, including codec, codec settings, and other formats.
+
+
+
+
+### SRTP  
+The Secure Real-time Transport Protocol (SRTP) is a Real-time Transport Protocol (RTP) profile, intended to provide encryption, message authentication and integrity, and replay attack protection to the RTP data in both unicast and multicast applications.  
+
+[Secure Real-time Transport Protocol](https://en.wikipedia.org/wiki/Secure_Real-time_Transport_Protocol).    
+[RFC3711 - The Secure Real-time Transport Protocol (SRTP)](https://tools.ietf.org/html/rfc3711)
+
+The S in SRTP stands for Secure, which provides the missing feature in protocols described so far. RFC 3711 defines a method by which all RTP and RTCP packets can be transmitted in a way that keeps the audio or video payload from being captured and decoded by prying eyes. While plain RTP presents a mechanism to packetize and transmit media, it does not get into the matter of security; any attacker might be able to join an ongoing RTP session and snoop on the content being transmitted.
+
+SRTP achieves its objectives by providing several protections:
+
+Encrypts the media payload of all RTP packets. Note though that only the payload is protected, and RTP headers are unprotected. This allows for media routers and other tools to inspect the information present on the headers, maybe for distribution or statistics aggregation, while still protecting the actual media content.
+Asserts that all RTP and RTCP packets are authenticated and come from the source where they purport to be coming.
+Ensures the integrity of the entire RTP and RTCP packets, i.e. protecting against arbitrary modifications of the packet contents.
+Prevents replay attacks, which are a specific kind of network attack where the same packet is duplicated and re-transmitted ("replayed") multiple times by a malicious participant, in an attempt to extract information about the cipher used to protect the packets. In essence, replay attacks are a form of "man-in-the-middle" attacks.
+An important consequence of the encryption that SRTP provides is that it's still possible to inspect the network packets (e.g. by using Wireshark) and see all RTP header information. This proves invaluable when the need arises for debugging a failing stream!
+
+This is the visualization of an RTP packet that has been protected with SRTP:
+
+     (Bitmap)
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  \
+     |V=2|P|X|  CC   |M|     PT      |       sequence number         |  |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+     |                           timestamp                           |  |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+     |           synchronization source (SSRC) identifier            |  |
+     +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+  |
+     |            contributing source (CSRC) identifiers             |  |-+
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  | |
+     |                   RTP extension (OPTIONAL)                    |  | |
+  /  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  | |
+  |  |                          payload  ...                         |  | |
++-|  |                               +-------------------------------+  | |
+| |  |                               | RTP padding   | RTP pad count |  | |
+| \  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  / |
+|    ~                     SRTP MKI (OPTIONAL)                       ~    |
+|    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    |
+|    :                 authentication tag (RECOMMENDED)              :    |
+|    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    |
+|                                                                         |
++---- Encrypted Portion                       Authenticated Portion ------+
+For a full description of all fields, refer to the RFC documents at RFC 3550 (RTP) and RFC 3711 (SRTP).
+
+ 
+ 
+
+
 
 ###  ICE
 Interactive Connectivity Establishment (ICE) is a technique used in computer networking to find ways for two computers to talk to each other as directly as possible in peer-to-peer networking. This is most commonly used for interactive media such as Voice over Internet Protocol (VoIP), peer-to-peer communications, video, and instant messaging. In such applications, you want to avoid communicating through a central server (which would slow down communication, and be expensive), but direct communication between client applications on the Internet is very tricky due to network address translators (NATs), firewalls, and other network barriers.  
@@ -98,25 +331,12 @@ Traversal Using Relays around NAT (TURN) is a protocol that assists in traversal
 [wiki - Traversal_Using_Relays_around_NAT](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT)  
 [RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](  https://tools.ietf.org/html/rfc5766).  
 
-### SDP 
-The Session Description Protocol (SDP) is a format for describing multimedia communication sessions for the purposes of session announcement and session invitation.[1] Its predominant use is in support of streaming media applications, such as voice over IP (VoIP) and video conferencing. SDP does not deliver any media streams itself, but is used between endpoints for negotiation of network metrics, media types, and other associated properties. The set of properties and parameters are often called a session profile.
-
-[wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)  
-[RFC4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).    
-
 ### DTLS 
 Datagram Transport Layer Security. DTLS is used to secure all data transfers between peers; encryption is a mandatory feature of WebRTC.
 
 [wiki: Datagram_Transport_Layer_Security](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)  
 [RFC6347 - Datagram Transport Layer Security Version 1.2](https://tools.ietf.org/html/rfc6347)  
 
-
-### SRTP  
-The Secure Real-time Transport Protocol (SRTP) is a Real-time Transport Protocol (RTP) profile, intended to provide encryption, message authentication and integrity, and replay attack protection to the RTP data in both unicast and multicast applications.  
-
-[Secure Real-time Transport Protocol
-](https://en.wikipedia.org/wiki/Secure_Real-time_Transport_Protocol).    
-[RFC3711 - The Secure Real-time Transport Protocol (SRTP)](https://tools.ietf.org/html/rfc3711)
 
 
 ### SCTP  
@@ -182,10 +402,41 @@ Transport streams differ from the similarly-named MPEG program stream in several
 ## 传输控制
 ### GCC
 [A Google Congestion Control Algorithm for Real-Time Communication draft-ietf-rmcat-gcc-02](https://tools.ietf.org/html/draft-ietf-rmcat-gcc-02)  
+[A Google Congestion Control Algorithm for Real-Time Communication draft-alvestrand-rmcat-congestion-03](https://tools.ietf.org/html/draft-alvestrand-rmcat-congestion-03)
+[](https://zhuanlan.zhihu.com/p/87622467)
 [小议WebRTC拥塞控制算法：GCC介绍](http://yunxin.163.com/blog/video18-0905/)  
 [WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
 [WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)  
 [Analysis and Design of the Google Congestion Control for Web Real-time Communication (WebRTC)](https://c3lab.poliba.it/images/6/65/Gcc-analysis.pdf)
+
+发送端使用*基于丢包*的用塞控制算法（LBCC），接收端使用*基于延迟*的用塞控制算法（DBCC），在通过rtcp通知给发送端，发送端使用两者的最小值
+- *基于丢包*的用塞控制算法（LBCC）
+   
+
+- *基于延迟*的用塞控制算法（DBCC）
+
+1. 预先滤波
+2. 到达时间滤波
+3. 自适应门限
+4. 过载检测
+5. 速率控制器
+6. pace队列
+
+
+
+### PCC
+[PCC: Performance-oriented Congestion Control](https://modong.github.io/pcc-page/)
+(https://www.usenix.org/conference/nsdi18/presentation/dong)
+核心思想是选择合适的发送速率，不断的调整发送速率，并根据接收端的反馈计算网络效能(u=f(吞吐，丢包率，延迟..)).
+增加速率如果，网络网络效能增加，则继续增加，如果减少发送速率
+1. 起始状态
+2. 决策状态
+3. 速率调节状态
+
+
+
+
+
 
 
 ### BBR
@@ -198,8 +449,16 @@ BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，
 [BBR及其在实时音视频领域的应用](https://mp.weixin.qq.com/s/8Hy5SBWXzhZ2X4YnjFflJw)  
 
 
-### PCC
-[PCC: Performance-oriented Congestion Control](https://modong.github.io/pcc-page/)
+https://www.youtube.com/watch?v=mnvuqLipNhg
+
+
+以最大吞吐量，最小延迟为目标，通过估计瓶颈带宽和rtt来计算发包速率
+1. startup: 通过增加发送速率估计瓶颈带宽，当瓶颈带宽不在增加时，该值即为最终的瓶颈带宽。发送端根据给定时间内收到的接收端应答包数据量来估算瓶颈带宽
+2. drain：降低速率发送完，缓冲区中待发送的数据
+3. probe_bw：增加瓶颈带宽下的发送速率，如果瓶颈带宽不增加，则使用之前的瓶颈带宽
+4. probe_rtt：通过最小滤波得到rtt值，当缓存过满时，减少发送速率
+
+
 
 
 ### NACK
@@ -214,18 +473,51 @@ BBR一开始是针对TCP的拥塞控制提出来的。它的输入为ACK/SACK，
 [Inofficial standalone library maintained by official QUIC developers](https://github.com/google/proto-quic)  
 [Good introduction read-up with comment from Jim Roskind (QUIC architect)](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
 
+
+
 ### ARQ
 [Automatic repeat request](https://en.wikipedia.org/wiki/ARQ_(film))  
 [重要的事情说三遍：ARQ协议](https://sexywp.com/introduction-of-arq.htm)  
 
-### jitter
+
+
+### NetEQ
+   集成了 1.自适应抖动缓冲区，3.丢包隐藏（或者叫丢包重建：插入静音爆、近似包），3.播放控制（正常，快播，慢播放），
+   网络抖动的的定义：
+   定义1. 由于这种延迟的变化导致网络中数据分组到达速率的变化
+   定义2. 接收端某个数据包到达时间间隔与平均数据包到达时间间隔之差定义为该数据包的延迟抖动
+
+1. 自适应抖动缓冲区
+   缓冲区的大小随着网络的变化而变化，
+   优点是网络抖动较大时丢包率较低，而网络抖动较小时，语音延迟相对较小
+
+2. 丢包隐藏
+   基本原理是产生一个与丢失包近似的语音包代替
+   - 发送端
+      - 交织
+      - 前向纠错
+      - 重传
+   - 接收端
+      - 插入法：插入静音爆，噪音包，或者重复前面的包
+      - 插值法：使用模式匹配或者插值技术，期望得到原来包近似的替代包
+      - 重构法：通过丢失包前后的编码信息重建一个补偿包，（ilibc）
+
+3. 播放控制
+
+
+
 
 ### synchronize
+
+
+
 
 ### FEC 
 [LearningWebRTC: FEC(Forward Error Correction)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-fec/)  
 [RTP Payload Format for Flexible Forward Error Correction (FEC) - draft-ietf-payload-flexible-fec-scheme-05](  https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)  
 [RFC 5109 - RTP Payload Format for Generic Forward Error Correction](https://tools.ietf.org/html/rfc5109)  
+
+
 
 ### RS 
 [Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)
@@ -296,5 +588,5 @@ Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK�
 ## 资源
 - [webrtc-architecture-protocols](https://princiya777.wordpress.com/2017/08/19/webrtc-architecture-protocols)
 - [webrtcglossary.com](https://webrtcglossary.com/)
-
+- [实时语音处理实战 - 实战指南]
 
