@@ -403,13 +403,110 @@ Transport streams differ from the similarly-named MPEG program stream in several
 ### GCC
 [A Google Congestion Control Algorithm for Real-Time Communication draft-ietf-rmcat-gcc-02](https://tools.ietf.org/html/draft-ietf-rmcat-gcc-02)  
 [A Google Congestion Control Algorithm for Real-Time Communication draft-alvestrand-rmcat-congestion-03](https://tools.ietf.org/html/draft-alvestrand-rmcat-congestion-03)
-[](https://zhuanlan.zhihu.com/p/87622467)
+[WebRTC GCC翻译和理解](https://zhuanlan.zhihu.com/p/87622467)
 [小议WebRTC拥塞控制算法：GCC介绍](http://yunxin.163.com/blog/video18-0905/)  
-[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
 [WebRTC-GCC两种实现方案对比](https://www.freehacker.cn/media/tcc-vs-gcc/)  
+[WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
 [Analysis and Design of the Google Congestion Control for Web Real-time Communication (WebRTC)](https://c3lab.poliba.it/images/6/65/Gcc-analysis.pdf)
 
+* 发送端基于丢包的码率控制
+
+通过接收端反馈的丢包率信息计算码率，计算公式如下：
+
+todo
+
+1. 丢包率>0.1：上次码率乘以（1-0.5*丢包率）
+2. 丢包率<0.02：1.05倍的上次码率
+3. 其他：上次码率
+
+
+* 接收端基于延迟的码率控制，
+
+根据调制策略，已经测量码率来计算码率，计算公式如下：
+
+todo
+
+1. normal：1.05倍的上次码率
+2. overuse：0.85倍测量码率（最近500ms）
+3. underuse：上次码率
+
+
+* 最终码率计算
+
+发送端收到接收端预估码率Ar后，根据发送端预估码率As(tk)、接收端预估Ar(tk)、最大允许码率Amax最小允许码率Amin，计算出最终的发送码率Rs(tk)
+
+Rs(tk)=max(min(min(As(tk),Ar(tk)),Amax),Amin)
+
+
+
+* 基于延迟的码率控制包含五个模块：
+
+
+1. Arrival-time Filter
+
+Arrival-time Filter模块用来计算网络延迟m(t[i])，GCC算法采用Kalman Filter来估算该值。Kalman Filter采用单程帧间延迟差值dm(ti)，单程帧间延迟差值表示两个数据帧到达接收端的延迟差值。
+
+dm(t[i])=(t[i]−t[i−1])−(T[i]−T[i−1])
+
+单程帧间延迟差值：相邻两个包，接收时间的差值减去发送时间的差值
+
+
+dm(t[i]) = m(t[i]) + v(t[i])
+
+v(t[i])： t[i]时刻的噪声
+
+由于dm(t[i])是实际的测量值，包含噪声数据，可以通过Kalman Filter过滤掉噪声，估算到相对稳定的m(t[i])值
+
+
+
+2. Adaptive Threshold
+
+Adaptive Threshold模块用来使算法适应延迟变化的灵敏性。输出阀值γ
+
+
+todo
+
+
+3. Overuse Detector
+
+Overuse Detector根据Arrival-time Filter计算出的网络延时m(ti)，以及Adaptive Threshold提供的γ(ti)值来判断当前网络是否过载，并告知Remote Rate Controller对应的信号s——overuse、normal、underuse。
+
+overuse: m(ti) > γ(ti) and keep 100ms
+underuse: m(ti) < -γ(ti) and keep 100ms
+normal: -γ(ti) < m(ti) < γ(ti)
+
+
+4. Remote Rate Controller
+
+根据过载检测的信号，以及接收端预估码率，来计算新的预估码率
+
+当s=normal，预估码率上升为上次预估码率的105%，处于increase状态。
+当s=overuse，预估码率降低为接收码率的85%，处于decrease状态;
+当s=underuse，预估码率保持和上次预估码率一样，处于hold状态；
+
+
+
+5. Remb Processing
+
+通过RTCP REMB报文通知发送端来自接收端预估的码率
+
+该报文每隔1s发送一次，但如果Ar(t[i]) < 0.97Ar(t[i−1])，该报文立马发送
+
+
+
+* 卡尔曼滤波（Kalman Filter）
+
+卡尔曼滤波本质上是一个优化算法，只要观测数据与隐藏的状态数据有关联，就可以根据观测数据计算出最小均方意义下的隐藏状态量的最优估计值。
+
+k时刻的值 能够通过 k-1时刻的真实值 和 k-1时刻的预测值，估算出来。
+
+[如何通俗并尽可能详细地解释卡尔曼滤波？](https://www.zhihu.com/question/23971601/answer/46480923)
+
+
+
+
 发送端使用*基于丢包*的用塞控制算法（LBCC），接收端使用*基于延迟*的用塞控制算法（DBCC），在通过rtcp通知给发送端，发送端使用两者的最小值
+
 - *基于丢包*的用塞控制算法（LBCC）
    
 
@@ -421,6 +518,8 @@ Transport streams differ from the similarly-named MPEG program stream in several
 4. 过载检测
 5. 速率控制器
 6. pace队列
+
+
 
 
 
