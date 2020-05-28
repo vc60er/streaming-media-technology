@@ -613,7 +613,7 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 
 ### FEC 
 [LearningWebRTC: FEC(Forward Error Correction)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-fec/)  
-[RTP Payload Format for Flexible Forward Error Correction (FEC) - draft-ietf-payload-flexible-fec-scheme-05](  https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)  
+[RTP Payload Format for Flexible Forward Error Correction (FEC) - draft-ietf-payload-flexible-fec-scheme-05](https://tools.ietf.org/html/draft-ietf-payload-flexible-fec-scheme-05)  
 [RFC 5109 - RTP Payload Format for Generic Forward Error Correction](https://tools.ietf.org/html/rfc5109)  
 
 
@@ -636,18 +636,77 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 ## 视频编码器
 ### H.264/avc 
 [wiki - Advanced Video Coding](https://en.wikipedia.org/wiki/Advanced_Video_Coding)  
-[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)[codec-h264](  https://www.freehacker.cn/media/codec-h264/)  
+[digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)   
+[codec-h264](  https://www.freehacker.cn/media/codec-h264/)  
 [rfc6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184)  
 [rfc6190 - RTP Payload Format for Scalable Video Coding](https://tools.ietf.org/html/rfc6190)  
 
+* 编码过程
+
+- 转yuv
+人眼对亮度更加敏感
+
+- 分区
+将帧分成几个分区，子分区甚至更多，
+在微小移动的部分使用较小的分区，而在静态背景上使用较大的分区。
+
+- 预测
+找到帧 1 和 帧 0 上的块相匹配。我们可以将这看作是运动预测。找不到当作残差
+一旦我们有了分区，我们就可以在它们之上做出预测。
+对于帧间预测，输出**运动向量**和**残差**；
+至于帧内预测，输出**预测方向**和**残差**。
+
+- 转换
+在我们得到残差块（预测分区-真实分区）之后，使用离散余弦变换（DCT），将像素块转换成频率系数块，丢弃部分高频部分
+
+离散余弦变换（DCT）。DCT 的主要功能有：
+* 将像素块转换为相同大小的频率系数块。
+* 可逆的，也意味着你可以还原回像素。
+* 高频部分和低频部分是分离的，压缩能量，更容易消除空间冗余。
+
+- 量化
+量化系数块中的数据以实现压缩。
+我们选择性地剔除信息（有损部分）或者简单来说，我们将除以单个的值（10），并舍入值
+
+- 墒编码
+VLC 编码
+
+- 比特流格式
+AVC (H.264) 标准规定信息将在宏帧（网络概念上的）内传输，称为 NAL（网络抽象层）
+
+
+nal类型
+
+SPS，这个类型的 NAL 负责传达通用编码参数，如配置，层级，分辨率等
+
+
+
+帧类型
+
+- I 帧（帧内编码，关键帧）
+I 帧（可参考，关键帧，帧内编码）是一个自足的帧。它不依靠任何东西来渲染，I 帧与静态图片相似。第一帧通常是 I 帧，但我们将看到 I 帧被定期插入其它类型的帧之间。
+
+- P 帧（预测
+P 帧利用了一个事实：当前的画面几乎总能使用之前的一帧进行渲染。例如，在第二帧，唯一的改变是球向前移动了。仅仅使用（第二帧）对前一帧的引用和差值，我们就能重建前一帧。
+
+
+- B 帧（双向预测）
+
+
+空间冗余（帧内预测）
+
+
+
+
+
 ### h.265/hevc
+
+- 更大更多分区（和子分区）
+- 帧内预测方向，改进的熵编码
+
 
 ### vp8
 
-### yuv
-[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)  
-[视频像素格式](https://wikipedia.freehacker.cn/auvi/video-pixel-format.html)  
-[[翻译]H.264 探索 第一部分 色彩模型](https://segmentfault.com/a/1190000006695679)  
 
 ### SVC 
 [SVC和视频通信](https://www.zego.im/article/2018/03/07/svc%e5%92%8c%e8%a7%86%e9%a2%91%e9%80%9a%e4%bf%a1/)  
@@ -665,6 +724,50 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 [(转)x264参数中文详解（X264 Settings）](https://www.cnblogs.com/lihaiping/p/4037470.html)  
 
 
+
+## 颜色空间
+RGB 用于计算机图形学中
+YIQ，YUV，YCrCb用于视频系统
+CMYK 用于彩色打印机
+
+
+### gamma校准
+大多数CRT显示器的变换函数产生的亮度值正比于信号幅度的某种能量（称为gamma），对信号进行gamma校准，是为了显示器的亮度输出就差不多是线性的。
+
+CRT显示关系是非线性，典型的CRT显示器的伽马曲线大致是一个伽马值为2.5的幂律曲线。显示器的这类伽马也称为display gamma，
+由于这个问题的存在，那么图像捕捉设备就需要进行一个伽马校正，它们使用的伽马叫做encoding gamma。所以，一个完整的图像系统需要2个伽马值：
+
+- encoding gamma：它描述了encoding transfer function，即图像设备捕捉到的场景亮度值（scene radiance values）和编码的像素值（encoded pixel values）之间的关系。
+- display gamma：它描述了display transfer function，即编码的像素值和显示的亮度（displayed radiance）之间的关系。
+如下图所示
+
+(https://img-blog.csdn.net/20150529135720109)
+而encoding gamma和display gamma的乘积就是真个图像系统的end-to-end gamma。如果这个乘积是1，那么显示出来的亮度就是和捕捉到的真实场景的亮度是成比例的。
+
+
+[我理解的伽马校正](https://blog.csdn.net/candycat1992/article/details/46228771)
+
+gamma校准的RGB，表示为R‘G’B‘
+R ́ = R1/2.8 G ́ = G1/2.8 B ́ = B1/2.8
+
+### RGB
+
+### YUV
+YUV是三大复合颜色视频标准（PAL,NTSC,SECAM）所采用的颜色空间，黑白系统使用亮度（Y）信息，颜色信息（U和V）以一种特定的方式加入，使得黑背电视机同样可以显示标准的黑白图像，而彩色电视机对额外的彩色信息进行解码从而显示彩色信息
+
+Y取之范围0～255，U取之范围0～+-122，V取之范围0～+-157
+
+[视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)  
+[视频像素格式](https://wikipedia.freehacker.cn/auvi/video-pixel-format.html)  
+[[翻译]H.264 探索 第一部分 色彩模型](https://segmentfault.com/a/1190000006695679)  
+
+
+### YCrCb
+YCrCb颜色空间是YUV颜色空间缩放和编译版本，Y定义为具有8位，标准颜色表示范围为16～235，Cb和Cr标称颜色表示范围定义为16～240，
+
+
+
+
 ## 音频编码器
 ### iLBC
 [Internet Low Bitrate Codec](https://en.wikipedia.org/wiki/Internet_Low_Bitrate_Codec)
@@ -677,6 +780,23 @@ Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK�
 [wiki - Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
 [RFC7587 - RTP Payload Format for the Opus Speech and Audio Codec](https://tools.ietf.org/html/rfc7587)  
 [RFC6716 - Definition of the Opus Audio Codec](https://tools.ietf.org/html/rfc6716)  
+
+
+
+
+## 智能视频封面
+- 帧过滤
+要过滤的帧包括低质帧与过渡帧。低质的衡量标准包括亮度、清晰度以及色彩单一度，满足一定阈值(经验值)要求方可保留。
+过渡帧的识别可以转化为另一个视频任务:分镜头边界检测(shot boundary detection)
+
+- 关键帧提取（关键内容，与视频最相关的帧）
+对帧做聚类, 比如k-means或者k-medoids。然后将(邻近)聚类中心的帧作为关键帧
+
+- 美学分数
+颜色方面：主要是HSV统计量，如平均HSV, 中央平均HSV, HSV颜色直方图，HSV对比度，以及对比度，Pleasure, Arousel, Dominance.
+纹理方面：则是基于Haralick特征, 包括Entropy, Energy, Homogeneity, GLCM。
+基础质量：方面考察了四个维度，包含对比度平衡、曝光平衡、JPEG质量以及全局清晰度。
+构图方面：则是三分法则、对称构图及原创性(Uniqueness， 这个有点虚).
 
 
 
