@@ -68,7 +68,7 @@ RTP typically runs over User Datagram Protocol (UDP). RTP is used in conjunction
 
 
 
-
+```
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -84,7 +84,7 @@ RTP typically runs over User Datagram Protocol (UDP). RTP is used in conjunction
 |                               +-------------------------------+
 |                               | RTP padding   | RTP pad count |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
+```
 
 - PT (Payload Type)
 
@@ -381,6 +381,7 @@ Dynamic Adaptive Streaming over HTTP (DASH), also known as MPEG-DASH, is an adap
 
 [wiki: Dynamic Adaptive Streaming over HTTP (DASH)](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP)
 
+https://juejin.im/post/5a697868f265da3e3f4ce17d
 
 ## 容器
 ### mp4     
@@ -409,7 +410,7 @@ Transport streams differ from the similarly-named MPEG program stream in several
 [WebRTC拥塞控制策略](https://www.freehacker.cn/media/webrtc-gcc/)  
 [Analysis and Design of the Google Congestion Control for Web Real-time Communication (WebRTC)](https://c3lab.poliba.it/images/6/65/Gcc-analysis.pdf)
 
-* 发送端基于丢包的码率控制
+**发送端基于丢包的码率控制：**
 
 通过接收端反馈的丢包率信息计算码率，计算公式如下：
 
@@ -420,7 +421,7 @@ todo
 3. 其他：上次码率
 
 
-* 接收端基于延迟的码率控制，
+**接收端基于延迟的码率控制：**
 
 根据调制策略，已经测量码率来计算码率，计算公式如下：
 
@@ -431,7 +432,7 @@ todo
 3. underuse：上次码率
 
 
-* 最终码率计算
+**最终码率计算**
 
 发送端收到接收端预估码率Ar后，根据发送端预估码率As(tk)、接收端预估Ar(tk)、最大允许码率Amax最小允许码率Amin，计算出最终的发送码率Rs(tk)
 
@@ -439,7 +440,7 @@ Rs(tk)=max(min(min(As(tk),Ar(tk)),Amax),Amin)
 
 
 
-* 基于延迟的码率控制包含五个模块：
+**基于延迟的码率控制包含五个模块：**
 
 
 1. Arrival-time Filter
@@ -494,11 +495,10 @@ normal: -γ(ti) < m(ti) < γ(ti)
 
 
 
-* 卡尔曼滤波（Kalman Filter）
+**卡尔曼滤波（Kalman Filter）**
 
 卡尔曼滤波本质上是一个优化算法，只要观测数据与隐藏的状态数据有关联，就可以根据观测数据计算出最小均方意义下的隐藏状态量的最优估计值。
 
-k时刻的值 能够通过 k-1时刻的真实值 和 k-1时刻的预测值，估算出来。
 
 [如何通俗并尽可能详细地解释卡尔曼滤波？](https://www.zhihu.com/question/23971601/answer/46480923)
 
@@ -578,19 +578,47 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 [Automatic repeat request](https://en.wikipedia.org/wiki/ARQ_(film))  
 [重要的事情说三遍：ARQ协议](https://sexywp.com/introduction-of-arq.htm)  
 
+**停止并等待 ARQ（Stop-and-wait ARQ）**
+
+逐个发送，收到确认后发送下一个，长时间无确认，会重发
+
+	问题:  
+	在网络差的情况下，发送发迟迟没有收到确认包，可能会重发原始包，但是接收方有可能收到两次发送的相同包，这种情况下，接收方不容易判断，接收到的第二包是新包，还是重发包。
+	
+	解决办法:  
+	对每个包前增加一个bit为，交替存储010101标志，如果接收到的包和上次收到包具有相同的头标志，则说明是重复包
+
+**后退N帧 ARQ（Go-Back-N ARQ）**
+
+按照窗口大小一次性发送，并且每个包添加序号；接收方，按照序号收包，发送确认，如果遇到乱序的则丢弃后续所有包。发送方再次从收到的确认包的最后一个的下一个开始发送数据
+
+	问题:
+	一次丢包后会造成多次重发包
+
+**选择性重发/拒绝 ARQ (Selective Repeat/Reject ARQ）**
+
+todo
+
 
 
 ### NetEQ
-   集成了 1.自适应抖动缓冲区，3.丢包隐藏（或者叫丢包重建：插入静音爆、近似包），3.播放控制（正常，快播，慢播放），
-   网络抖动的的定义：
-   定义1. 由于这种延迟的变化导致网络中数据分组到达速率的变化
-   定义2. 接收端某个数据包到达时间间隔与平均数据包到达时间间隔之差定义为该数据包的延迟抖动
 
-1. 自适应抖动缓冲区
+包括以下部分：
+
+1. 自适应抖动缓冲区，
+2. 丢包隐藏（或者叫丢包重建：插入静音爆、近似包），
+3. 播放控制（正常，快播，慢播放），
+
+网络抖动的的定义：
+
+	定义1. 由于这种延迟的变化导致网络中数据分组到达速率的变化</br>
+	定义2. 接收端某个数据包到达时间间隔与平均数据包到达时间间隔之差定义为该数据包的延迟抖动
+
+1. 自适应抖动缓冲区</br>
    缓冲区的大小随着网络的变化而变化，
    优点是网络抖动较大时丢包率较低，而网络抖动较小时，语音延迟相对较小
 
-2. 丢包隐藏
+2. 丢包隐藏</br>
    基本原理是产生一个与丢失包近似的语音包代替
    - 发送端
       - 交织
@@ -601,9 +629,7 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
       - 插值法：使用模式匹配或者插值技术，期望得到原来包近似的替代包
       - 重构法：通过丢失包前后的编码信息重建一个补偿包，（ilibc）
 
-3. 播放控制
-
-
+3. 播放控制</br>
 
 
 ### synchronize
@@ -640,38 +666,40 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 [codec-h264](  https://www.freehacker.cn/media/codec-h264/)  
 [rfc6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184)  
 [rfc6190 - RTP Payload Format for Scalable Video Coding](https://tools.ietf.org/html/rfc6190)  
+<https://zhuanlan.zhihu.com/p/71928833>
 
-* 编码过程
+**编码过程**
 
-- 转yuv
+- 转yuv。  
 人眼对亮度更加敏感
 
-- 分区
+- 分区   
 将帧分成几个分区，子分区甚至更多，
 在微小移动的部分使用较小的分区，而在静态背景上使用较大的分区。
 
-- 预测
+- 预测   
 找到帧 1 和 帧 0 上的块相匹配。我们可以将这看作是运动预测。找不到当作残差
-一旦我们有了分区，我们就可以在它们之上做出预测。
-对于帧间预测，输出**运动向量**和**残差**；
-至于帧内预测，输出**预测方向**和**残差**。
+一旦我们有了分区，我们就可以在它们之上做出预测。</br>
+对于帧间预测，输出**运动向量**和**残差**；</br>
+至于帧内预测，输出**预测方向**和**残差**。</br>
 
-- 转换
-在我们得到残差块（预测分区-真实分区）之后，使用离散余弦变换（DCT），将像素块转换成频率系数块，丢弃部分高频部分
+- 转换   
+在我们得到残差块（预测分区-真实分区）之后，使用离散余弦变换（DCT），将像素块转换成频率系数块，丢弃部分高频部分 
 
-离散余弦变换（DCT）。DCT 的主要功能有：
-* 将像素块转换为相同大小的频率系数块。
-* 可逆的，也意味着你可以还原回像素。
-* 高频部分和低频部分是分离的，压缩能量，更容易消除空间冗余。
+	离散余弦变换（DCT）的主要功能有：</br>
+	- 将像素块转换为相同大小的频率系数块。  
+	- 可逆的，也意味着你可以还原回像素。  
+	- 高频部分和低频部分是分离的，压缩能量，更容易消除空间冗余。  
 
-- 量化
+
+- 量化   
 量化系数块中的数据以实现压缩。
 我们选择性地剔除信息（有损部分）或者简单来说，我们将除以单个的值（10），并舍入值
 
-- 墒编码
+- 墒编码.  
 VLC 编码
 
-- 比特流格式
+- 比特流格式.  
 AVC (H.264) 标准规定信息将在宏帧（网络概念上的）内传输，称为 NAL（网络抽象层）
 
 
@@ -785,14 +813,17 @@ Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK�
 
 
 ## 智能视频封面
-- 帧过滤
+**帧过滤：**
+
 要过滤的帧包括低质帧与过渡帧。低质的衡量标准包括亮度、清晰度以及色彩单一度，满足一定阈值(经验值)要求方可保留。
 过渡帧的识别可以转化为另一个视频任务:分镜头边界检测(shot boundary detection)
 
-- 关键帧提取（关键内容，与视频最相关的帧）
+**关键帧提取（关键内容，与视频最相关的帧）：**
+
 对帧做聚类, 比如k-means或者k-medoids。然后将(邻近)聚类中心的帧作为关键帧
 
-- 美学分数
+**美学分数：**
+
 颜色方面：主要是HSV统计量，如平均HSV, 中央平均HSV, HSV颜色直方图，HSV对比度，以及对比度，Pleasure, Arousel, Dominance.
 纹理方面：则是基于Haralick特征, 包括Entropy, Energy, Homogeneity, GLCM。
 基础质量：方面考察了四个维度，包含对比度平衡、曝光平衡、JPEG质量以及全局清晰度。
