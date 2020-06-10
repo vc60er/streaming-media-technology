@@ -482,18 +482,18 @@ todo
 
 Overuse Detector根据Arrival-time Filter计算出的网络延时m(ti)，以及Adaptive Threshold提供的γ(ti)值来判断当前网络是否过载，并告知Remote Rate Controller对应的信号s——overuse、normal、underuse。
 
-overuse: m(ti) > γ(ti) and keep 100ms
-underuse: m(ti) < -γ(ti) and keep 100ms
-normal: -γ(ti) < m(ti) < γ(ti)
+- overuse: m(ti) > γ(ti) and keep 100ms
+- underuse: m(ti) < -γ(ti) and keep 100ms
+- normal: -γ(ti) < m(ti) < γ(ti)
 
 
 4. Remote Rate Controller
 
 根据过载检测的信号，以及接收端预估码率，来计算新的预估码率
 
-当s=normal，预估码率上升为上次预估码率的105%，处于increase状态。
-当s=overuse，预估码率降低为接收码率的85%，处于decrease状态;
-当s=underuse，预估码率保持和上次预估码率一样，处于hold状态；
+- 当s=normal，预估码率上升为上次预估码率的105%，处于increase状态。
+- 当s=overuse，预估码率降低为接收码率的85%，处于decrease状态;
+- 当s=underuse，预估码率保持和上次预估码率一样，处于hold状态；
 
 
 
@@ -538,6 +538,7 @@ normal: -γ(ti) < m(ti) < γ(ti)
 (https://www.usenix.org/conference/nsdi18/presentation/dong)
 核心思想是选择合适的发送速率，不断的调整发送速率，并根据接收端的反馈计算网络效能(u=f(吞吐，丢包率，延迟..)).
 增加速率如果，网络网络效能增加，则继续增加，如果减少发送速率
+
 1. 起始状态
 2. 决策状态
 3. 速率调节状态
@@ -684,11 +685,11 @@ todo
 人眼对亮度更加敏感
 
 - 分区   
-将帧分成几个分区，子分区甚至更多，
-在微小移动的部分使用较小的分区，而在静态背景上使用较大的分区。
+将帧分成几个分区，子分区甚至更多，<br>
+在微小移动的部分使用较小的分区，而在静态背景上使用较大的分区。<br>
 
 - 预测   
-找到帧 1 和 帧 0 上的块相匹配。我们可以将这看作是运动预测。找不到当作残差
+找到帧 1 和 帧 0 上的块相匹配。我们可以将这看作是运动预测。找不到的当作残差<br>
 一旦我们有了分区，我们就可以在它们之上做出预测。</br>
 对于帧间预测，输出**运动向量**和**残差**；</br>
 至于帧内预测，输出**预测方向**和**残差**。</br>
@@ -703,8 +704,8 @@ todo
 
 
 - 量化   
-量化系数块中的数据以实现压缩。
-我们选择性地剔除信息（有损部分）或者简单来说，我们将除以单个的值（10），并舍入值
+量化系数块中的数据以实现压缩。<br>
+我们选择性地剔除信息（有损部分）或者简单来说，我们将除以单个的值（10），并舍入值<br>
 
 - 墒编码.  
 VLC 编码
@@ -746,12 +747,19 @@ P 帧利用了一个事实：当前的画面几乎总能使用之前的一帧进
 ### vp8
 
 
-### SVC 
+### SVC (可伸缩视频编码)
+
 [SVC和视频通信](https://www.zego.im/article/2018/03/07/svc%e5%92%8c%e8%a7%86%e9%a2%91%e9%80%9a%e4%bf%a1/)  
 [在Google Chrome WebRTC中分层蛋糕式的VP9 SVC](https://www.zego.im/article/2018/02/26/%E5%9C%A8google-chrome-webrtc%E4%B8%AD%E5%88%86%E5%B1%82%E8%9B%8B%E7%B3%95%E5%BC%8F%E7%9A%84vp9-svc/)  
 [姜健：VP9可适性视频编码（SVC）新特性](https://mp.weixin.qq.com/s/PN91H_bFQ2X_ySiMGxGK5A?utm_source=tuicool&utm_medium=referral)  
 [H264 SVC：从编码到RTP打包](https://xjsxjtu.github.io/2017-06-24/H264-SVC/)  
 [H.264 SVC](https://www.cnblogs.com/huxiaopeng/p/5653310.html)  
+
+
+
+
+
+
 
 ### x264编码器参数 
 [H.264 Video Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.264)  
@@ -770,10 +778,10 @@ CMYK 用于彩色打印机
 
 
 ### gamma校准
-大多数CRT显示器的变换函数产生的亮度值正比于信号幅度的某种能量（称为gamma），对信号进行gamma校准，是为了显示器的亮度输出就差不多是线性的。
+大多数CRT显示器的变换函数产生的亮度值正比于信号幅度的某种能量（称为gamma），对信号进行gamma校准，是为了显示器的亮度输出就差不多是线性的。<br>
 
-CRT显示关系是非线性，典型的CRT显示器的伽马曲线大致是一个伽马值为2.5的幂律曲线。显示器的这类伽马也称为display gamma，
-由于这个问题的存在，那么图像捕捉设备就需要进行一个伽马校正，它们使用的伽马叫做encoding gamma。所以，一个完整的图像系统需要2个伽马值：
+CRT显示关系是非线性，典型的CRT显示器的伽马曲线大致是一个伽马值为2.5的幂律曲线。显示器的这类伽马也称为display gamma，<br>
+由于这个问题的存在，那么图像捕捉设备就需要进行一个伽马校正，它们使用的伽马叫做encoding gamma。所以，一个完整的图像系统需要2个伽马值：<br>
 
 - encoding gamma：它描述了encoding transfer function，即图像设备捕捉到的场景亮度值（scene radiance values）和编码的像素值（encoded pixel values）之间的关系。
 - display gamma：它描述了display transfer function，即编码的像素值和显示的亮度（displayed radiance）之间的关系。
@@ -791,9 +799,9 @@ R ́ = R1/2.8 G ́ = G1/2.8 B ́ = B1/2.8
 ### RGB
 
 ### YUV
-YUV是三大复合颜色视频标准（PAL,NTSC,SECAM）所采用的颜色空间，黑白系统使用亮度（Y）信息，颜色信息（U和V）以一种特定的方式加入，使得黑背电视机同样可以显示标准的黑白图像，而彩色电视机对额外的彩色信息进行解码从而显示彩色信息
+YUV是三大复合颜色视频标准（PAL,NTSC,SECAM）所采用的颜色空间，黑白系统使用亮度（Y）信息，颜色信息（U和V）以一种特定的方式加入，使得黑背电视机同样可以显示标准的黑白图像，而彩色电视机对额外的彩色信息进行解码从而显示彩色信息<br>
 
-Y取之范围0～255，U取之范围0～+-122，V取之范围0～+-157
+Y取之范围0～255，U取之范围0～+-122，V取之范围0～+-157<br>
 
 [视频像素格式YUV和RGB](https://www.freehacker.cn/media/codec-yuv-rgb/)  
 [视频像素格式](https://wikipedia.freehacker.cn/auvi/video-pixel-format.html)  
@@ -823,10 +831,11 @@ Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK�
 
 
 ## 智能视频封面
+
 **帧过滤：**
 
-要过滤的帧包括低质帧与过渡帧。低质的衡量标准包括亮度、清晰度以及色彩单一度，满足一定阈值(经验值)要求方可保留。
-过渡帧的识别可以转化为另一个视频任务:分镜头边界检测(shot boundary detection)
+要过滤的帧包括低质帧与过渡帧。低质的衡量标准包括亮度、清晰度以及色彩单一度，满足一定阈值(经验值)要求方可保留。<br>
+过渡帧的识别可以转化为另一个视频任务:分镜头边界检测(shot boundary detection)<br>
 
 **关键帧提取（关键内容，与视频最相关的帧）：**
 
@@ -834,10 +843,10 @@ Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK�
 
 **美学分数：**
 
-颜色方面：主要是HSV统计量，如平均HSV, 中央平均HSV, HSV颜色直方图，HSV对比度，以及对比度，Pleasure, Arousel, Dominance.
-纹理方面：则是基于Haralick特征, 包括Entropy, Energy, Homogeneity, GLCM。
-基础质量：方面考察了四个维度，包含对比度平衡、曝光平衡、JPEG质量以及全局清晰度。
-构图方面：则是三分法则、对称构图及原创性(Uniqueness， 这个有点虚).
+颜色方面：主要是HSV统计量，如平均HSV, 中央平均HSV, HSV颜色直方图，HSV对比度，以及对比度，Pleasure, Arousel, Dominance.<br>
+纹理方面：则是基于Haralick特征, 包括Entropy, Energy, Homogeneity, GLCM。<br>
+基础质量：方面考察了四个维度，包含对比度平衡、曝光平衡、JPEG质量以及全局清晰度<br>
+构图方面：则是三分法则、对称构图及原创性(Uniqueness， 这个有点虚).<br>
 
 
 
