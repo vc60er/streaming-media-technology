@@ -1,69 +1,72 @@
-Table of Contents
-=================
-
-   * [流媒体技术手册](#流媒体技术手册)
-      * [协议](#协议)
-         * [RTP](#rtp)
-         * [RTCP](#rtcp)
-         * [SDP](#sdp)
-         * [SRTP](#srtp)
-         * [ICE](#ice)
-         * [STUN](#stun)
-         * [TURN](#turn)
-         * [DTLS](#dtls)
-         * [SCTP](#sctp)
-         * [RTMP](#rtmp)
-         * [RTSP](#rtsp)
-         * [HLS](#hls)
-         * [DASH](#dash)
-      * [容器](#容器)
-         * [mp4](#mp4)
-         * [ts](#ts)
-      * [传输控制](#传输控制)
-         * [GCC](#gcc)
-         * [PCC](#pcc)
-         * [BBR](#bbr)
-         * [NACK](#nack)
-         * [QUIC](#quic)
-         * [ARQ](#arq)
-         * [NetEQ](#neteq)
-         * [synchronize](#synchronize)
-         * [FEC](#fec)
-         * [RS](#rs)
-      * [语音增强](#语音增强)
-         * [AEC](#aec)
-         * [NS](#ns)
-         * [AGC](#agc)
-         * [VAD](#vad)
-      * [视频编码器](#视频编码器)
-         * [H.264/avc](#h264avc)
-         * [h.265/hevc](#h265hevc)
-         * [vp8](#vp8)
-         * [SVC](#svc)
-         * [x264编码器参数](#x264编码器参数)
-      * [颜色空间](#颜色空间)
-         * [gamma校准](#gamma校准)
-         * [RGB](#rgb)
-         * [YUV](#yuv)
-         * [YCrCb](#ycrcb)
-      * [音频编码器](#音频编码器)
-         * [iLBC](#ilbc)
-         * [ACC](#acc)
-         * [opus](#opus)
-      * [智能视频封面](#智能视频封面)
-      * [工具](#工具)
-      * [资源](#资源)
-
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
-
 # 流媒体技术手册
+
+<!-- MarkdownTOC autolink=true  -->
+
+- [协议](#%E5%8D%8F%E8%AE%AE)
+    - [RTP](#rtp)
+    - [RTCP](#rtcp)
+    - [SDP](#sdp)
+    - [SRTP](#srtp)
+    - [ICE](#ice)
+    - [STUN](#stun)
+    - [TURN](#turn)
+    - [DTLS](#dtls)
+    - [SCTP](#sctp)
+    - [RTMP](#rtmp)
+    - [RTSP](#rtsp)
+    - [HLS](#hls)
+    - [DASH](#dash)
+- [容器](#%E5%AE%B9%E5%99%A8)
+    - [mp4](#mp4)
+    - [ts](#ts)
+- [传输控制](#%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6)
+    - [GCC](#gcc)
+    - [PCC](#pcc)
+    - [BBR](#bbr)
+    - [NACK](#nack)
+    - [QUIC](#quic)
+    - [ARQ](#arq)
+    - [NetEQ](#neteq)
+    - [synchronize](#synchronize)
+    - [FEC](#fec)
+    - [RS](#rs)
+- [语音增强](#%E8%AF%AD%E9%9F%B3%E5%A2%9E%E5%BC%BA)
+    - [AEC](#aec)
+    - [NS](#ns)
+    - [AGC](#agc)
+    - [VAD](#vad)
+- [视频编码器](#%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81%E5%99%A8)
+    - [H.264/avc](#h264avc)
+    - [h.265/hevc](#h265hevc)
+    - [vp8](#vp8)
+    - [SVC \(可伸缩视频编码\)](#svc-%E5%8F%AF%E4%BC%B8%E7%BC%A9%E8%A7%86%E9%A2%91%E7%BC%96%E7%A0%81)
+    - [x264编码器参数](#x264%E7%BC%96%E7%A0%81%E5%99%A8%E5%8F%82%E6%95%B0)
+- [颜色空间](#%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4)
+    - [gamma校准](#gamma%E6%A0%A1%E5%87%86)
+    - [RGB](#rgb)
+    - [YUV](#yuv)
+    - [YCrCb](#ycrcb)
+- [音频编码器](#%E9%9F%B3%E9%A2%91%E7%BC%96%E7%A0%81%E5%99%A8)
+    - [iLBC](#ilbc)
+    - [ACC](#acc)
+    - [opus](#opus)
+- [智能视频封面](#%E6%99%BA%E8%83%BD%E8%A7%86%E9%A2%91%E5%B0%81%E9%9D%A2)
+- [工具](#%E5%B7%A5%E5%85%B7)
+- [资源](#%E8%B5%84%E6%BA%90)
+
+<!-- /MarkdownTOC -->
+
+
+
+
+
 ## 协议
-###  RTP
-The Real-time Transport Protocol (RTP) is a network protocol for delivering audio and video over IP networks. RTP is used in communication and entertainment systems that involve streaming media, such as telephony, video teleconference applications including WebRTC, television services and web-based push-to-talk features.  
+### RTP
+The Real-time Transport Protocol (RTP) is a network protocol for delivering audio and video over IP networks. RTP is used in communication and entertainment systems that involve streaming media, such as telephony, video teleconference applications including WebRTC, television services and web-based push-to-talk features. 
 
 RTP typically runs over User Datagram Protocol (UDP). RTP is used in conjunction with the RTP Control Protocol (RTCP). While RTP carries the media streams (e.g., audio and video), RTCP is used to monitor transmission statistics and quality of service (QoS) and aids synchronization of multiple streams. RTP is one of the technical foundations of Voice over IP and in this context is often used in conjunction with a signaling protocol such as the Session Initiation Protocol (SIP) which establishes connections across the network.  
 
-[wiki: Real-time Transport Protocol](https://en.wikipedia.org/wiki/Real-time_Transport_Protocol)  
+[Wiki: Real-time Transport Protocol](https://en.wikipedia.org/wiki/Real-time_Transport_Protocol)  
 [RFC3550 - RTP: A Transport Protocol for Real-Time Applications](https://tools.ietf.org/html/rfc3550)  
 [RFC3551 - RTP Profile for Audio and Video Conferences with Minimal Control](https://tools.ietf.org/html/rfc3551)  
 [RFC3611 - RTP Control Protocol Extended Reports (RTCP XR)](https://tools.ietf.org/html/rfc3611)  
@@ -78,7 +81,7 @@ RTP typically runs over User Datagram Protocol (UDP). RTP is used in conjunction
 
 
 
-```
+```shell
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -102,7 +105,7 @@ Identifies the format of the RTP payload. In essence, a Payload Type is an integ
 
 Originally, the standard provided some predefined Payload Types for commonly used encoding formats at the time. For example, the Payload Type 34 corresponds to the H.263 video codec. More predefined values can be found in [RFC 3551](https://tools.ietf.org/html/rfc3551):
 
-```
+```shell
 PT      encoding    media type  clock rate
         name                    (Hz)
 _____________________________________________
@@ -145,10 +148,10 @@ Another random number, it identifies the media track (e.g. one single video, or 
 
 
 
-###  RTCP
+### RTCP
 The RTP Control Protocol (RTCP) is a sister protocol of the Real-time Transport Protocol (RTP). Its basic functionality and packet structure is defined in RFC 3550. RTCP provides out-of-band statistics and control information for an RTP session. It partners with RTP in the delivery and packaging of multimedia data, but does not transport any media data itself.  
 
-[wiki - RTP Control Protocol](https://en.wikipedia.org/wiki/RTP_Control_Protocol)  
+[Wiki - RTP Control Protocol](https://en.wikipedia.org/wiki/RTP_Control_Protocol)  
 [RFC3550 - RTP: A Transport Protocol for Real-Time Applications](https://tools.ietf.org/html/rfc3550).    
 [RTP (I): Intro to RTP and SDP](https://www.kurento.org/blog/rtp-i-intro-rtp-and-sdp)
 
@@ -179,12 +182,12 @@ These features might or might not be supported by both peers in an RTP session, 
 
 
 
-### SDP 
+### SDP
 The Session Description Protocol (SDP) is a format for describing multimedia communication sessions for the purposes of session announcement and session invitation.[1] Its predominant use is in support of streaming media applications, such as voice over IP (VoIP) and video conferencing. SDP does not deliver any media streams itself, but is used between endpoints for negotiation of network metrics, media types, and other associated properties. The set of properties and parameters are often called a session profile.
 
-[wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)  
+[Wiki - Session_Description_Protocol](https://en.wikipedia.org/wiki/Session_Description_Protocol)  
 [RFC4566 - SDP: Session Description Protocol](https://tools.ietf.org/html/rfc4566).    
-[](https://www.kurento.org/blog/rtp-i-intro-rtp-and-sdp)
+[RTP (I): Intro to RTP and SDP](https://www.kurento.org/blog/rtp-i-intro-rtp-and-sdp)
 
 An SDP message, when generated by a participant in an RTP session, serves as an explicit description of the media that should be sent to it, from other remote peers. It's important to insist on this detail: in general (as like with everything, there are exceptions), the SDP information refers to what an RTP participant expects to receive.
 Another way to put this is that an SDP message is a request for remote senders to send their data in the format specified by the message.
@@ -195,7 +198,7 @@ RFC 4566 contains the full description of all basic SDP fields. Other RFC docume
 
 Example 1: Simplest SDP
 This is an example of the most basic SDP message one can find:
-```
+```shell
 v=0
 o=- 0 0 IN IP4 127.0.0.1
 s=-
@@ -207,7 +210,7 @@ a=rtpmap:96 VP8/90000
 It gets divided into two main sections:
 
 First 5 lines are what is called the "session-level description":
-```
+```shell
 v=0
 o=- 0 0 IN IP4 127.0.0.1
 s=-
@@ -217,7 +220,7 @@ t=0 0
 It describes things such as the peer's host IP address, time bases, and summary description. Most of these values are optional, so they can be set to zero (0) or empty strings with a dash (-).
 
 Next comes the "media-level description", consisting of a line that starts with m= and any number of additional attributes (a=) afterwards:
-```
+```shell
 m=video 5004 RTP/AVP 96
 a=rtpmap:96 VP8/90000
 ```
@@ -232,7 +235,7 @@ In this example, the media-level description reads as follows:
 
 Example 2: Annotated SDP
 SDP does not allow comments, but if it did, we could see one like this:
-```
+```shell
 # Protocol version; always 0
 v=0
 
@@ -266,7 +269,7 @@ In this example we can see how the media could be ambiguously defined to use mul
 
 
 
-### SRTP  
+### SRTP
 The Secure Real-time Transport Protocol (SRTP) is a Real-time Transport Protocol (RTP) profile, intended to provide encryption, message authentication and integrity, and replay attack protection to the RTP data in both unicast and multicast applications.  
 
 [Secure Real-time Transport Protocol](https://en.wikipedia.org/wiki/Secure_Real-time_Transport_Protocol).    
@@ -284,6 +287,7 @@ An important consequence of the encryption that SRTP provides is that it's still
 
 This is the visualization of an RTP packet that has been protected with SRTP:
 
+```shell
      (Bitmap)
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -308,48 +312,47 @@ This is the visualization of an RTP packet that has been protected with SRTP:
 |    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    |
 |                                                                         |
 +---- Encrypted Portion                       Authenticated Portion ------+
+```
 For a full description of all fields, refer to the RFC documents at RFC 3550 (RTP) and RFC 3711 (SRTP).
 
  
- 
 
 
-
-###  ICE
+### ICE
 Interactive Connectivity Establishment (ICE) is a technique used in computer networking to find ways for two computers to talk to each other as directly as possible in peer-to-peer networking. This is most commonly used for interactive media such as Voice over Internet Protocol (VoIP), peer-to-peer communications, video, and instant messaging. In such applications, you want to avoid communicating through a central server (which would slow down communication, and be expensive), but direct communication between client applications on the Internet is very tricky due to network address translators (NATs), firewalls, and other network barriers.  
 
-[wiki: Interactive_Connectivity_Establishment](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)  
+[Wiki: Interactive_Connectivity_Establishment](https://en.wikipedia.org/wiki/Interactive_Connectivity_Establishment)  
 [RFC5245: Interactive Connectivity Establishment (ICE): A Protocol for NAT Traversal for Offer/Answer Protocols](  https://tools.ietf.org/html/rfc5245).   
 [RFC6544: TCP Candidates with Interactive Connectivity Establishment (ICE)](https://tools.ietf.org/html/rfc6544).  
 [RFC8445: Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal](https://tools.ietf.org/html/rfc6544)
 
 
-### STUN 
+### STUN
 Session Traversal Utilities for NAT (STUN) is a standardized set of methods, including a network protocol, for traversal of network address translator (NAT) gateways in applications of real-time voice, video, messaging, and other interactive communications. 
 
 STUN is a tool used by other protocols, such as Interactive Connectivity Establishment (ICE), the Session Initiation Protocol (SIP), or WebRTC. It provides a tool for hosts to discover the presence of a network address translator, and to discover the mapped, usually public, Internet Protocol (IP) address and port number that the NAT has allocated for the application's User Datagram Protocol (UDP) flows to remote hosts. The protocol requires assistance from a third-party network server (STUN server) located on the opposing (public) side of the NAT, usually the public Internet.   
 
-[wiki - STUN](https://en.wikipedia.org/wiki/STUN)  
+[Wiki - STUN](https://en.wikipedia.org/wiki/STUN)  
 [RFC 3489 - STUN - Simple Traversal of User Datagram Protocol (UDP) Through Network Address Translators (NATs)](  https://tools.ietf.org/html/rfc3489).   
 [RFC5389 - Session Traversal Utilities for NAT (STUN)](https://tools.ietf.org/html/rfc5389).   
 [RFC5389_NAT 的会话穿透用法 (STUN)](rfc-chinese/RFC5389_NAT的会话穿透用法(STUN).pdf)  
 [P2P技术简介-NAT（ Network Address Translation）穿越（俗称打洞）技术](https://www.cnblogs.com/vc60er/p/6916190.html)  
 
-### TURN   
+### TURN
 Traversal Using Relays around NAT (TURN) is a protocol that assists in traversal of network address translators (NAT) or firewalls for multimedia applications. It may be used with the Transmission Control Protocol (TCP) and User Datagram Protocol (UDP). It is most useful for clients on networks masqueraded by symmetric NAT devices. TURN does not aid in running servers on well known ports in the private network through a NAT;   
 
-[wiki - Traversal_Using_Relays_around_NAT](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT)  
+[Wiki - Traversal_Using_Relays_around_NAT](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT)  
 [RFC 5766 - Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)](  https://tools.ietf.org/html/rfc5766).  
 
-### DTLS 
+### DTLS
 Datagram Transport Layer Security. DTLS is used to secure all data transfers between peers; encryption is a mandatory feature of WebRTC.
 
-[wiki: Datagram_Transport_Layer_Security](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)  
+[Wiki: Datagram_Transport_Layer_Security](https://en.wikipedia.org/wiki/Datagram_Transport_Layer_Security)  
 [RFC6347 - Datagram Transport Layer Security Version 1.2](https://tools.ietf.org/html/rfc6347)  
 
 
 
-### SCTP  
+### SCTP
 Stream Control Transport Protocol. 
 
 SCTP as a protocol can be seen as a hybrid of UDP and TCP.
@@ -374,30 +377,31 @@ SCTP is designed to transport Public Switched Telephone Network (PSTN) signaling
 
 ### RTMP
 TCP-based protocol which maintains persistent connections and allows low-latency communication.  
-[wiki - Real-Time Messaging Protocol](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
+[Wiki - Real-Time Messaging Protocol](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol)
 
 ### RTSP
 While similar in some ways to HTTP, RTSP defines control sequences useful in controlling multimedia playback. While HTTP is stateless, RTSP has state; an identifier is used when needed to track concurrent sessions. Like HTTP, RTSP uses TCP to maintain an end-to-end connection and, while most RTSP control messages are sent by the client to the server, some commands travel in the other direction (i.e. from server to client).  
 
-[wiki - https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol](https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol)
+[Wiki - https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol](https://en.wikipedia.org/wiki/Real_Time_Streaming_Protocol)
 
 ### HLS
 HTTP Live Streaming (also known as HLS) is an HTTP-based adaptive bitrate streaming communications protocol developed by Apple Inc.
 
-[wiki - HTTP Live Streaming](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
+[Wiki - HTTP Live Streaming](https://en.wikipedia.org/wiki/HTTP_Live_Streaming)
 
 ### DASH
 Dynamic Adaptive Streaming over HTTP (DASH), also known as MPEG-DASH, is an adaptive bitrate streaming technique that enables high quality streaming of media content over the Internet delivered from conventional HTTP web servers. 
 
-[wiki: Dynamic Adaptive Streaming over HTTP (DASH)](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP)
+[Wiki: Dynamic Adaptive Streaming over HTTP (DASH)](https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP)
 
-https://juejin.im/post/5a697868f265da3e3f4ce17d
+[DASH协议及各种码率自适应协议的对比](https://juejin.im/post/5a697868f265da3e3f4ce17d)
+
 
 ## 容器
 ### mp4     
 MPEG-4 Part 14 or MP4 is a digital multimedia container format most commonly used to store video and audio, but it can also be used to store other data such as subtitles and still images.[2] Like most modern container formats, it allows streaming over the Internet. The only official filename extension for MPEG-4 Part 14 files is .mp4. MPEG-4 Part 14 (formally ISO/IEC 14496-14:2003) is a standard specified as a part of MPEG-4.  
 
-[wiki - MPEG-4_Part_14](https://en.wikipedia.org/wiki/MPEG-4_Part_14)
+[Wiki - MPEG-4_Part_14](https://en.wikipedia.org/wiki/MPEG-4_Part_14)
 
 
 ### ts  
@@ -407,7 +411,7 @@ Transport stream specifies a container format encapsulating packetized elementar
 
 Transport streams differ from the similarly-named MPEG program stream in several important ways: program streams are designed for reasonably reliable media, such as discs (like DVDs), while transport streams are designed for less reliable transmission, namely terrestrial or satellite broadcast. Further, a transport stream may carry multiple programs.
 
-[wiki - MPEG transport stream](https://en.wikipedia.org/wiki/MPEG_transport_stream)
+[Wiki - MPEG transport stream](https://en.wikipedia.org/wiki/MPEG_transport_stream)
 
 
 ## 传输控制
@@ -572,13 +576,13 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 
 
 ### NACK
-[wiki: Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))  
+[Wiki: Acknowledgement (data networks)](https://en.wikipedia.org/wiki/Acknowledgement_(data_networks))  
 [RFC4588 - RTP Retransmission Payload Format](https://tools.ietf.org/html/rfc4588)  
 [LearningWebRTC: NACK(Negative ACKnowledgement)](https://xjsxjtu.github.io/2017-07-16/LearningWebRTC-nack/)  
 
 
 ### QUIC
-[wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)  
+[Wiki - QUIC](https://en.wikipedia.org/wiki/QUIC)  
 [Official Google description:](https://www.chromium.org/quic)  
 [Inofficial standalone library maintained by official QUIC developers](https://github.com/google/proto-quic)  
 [Good introduction read-up with comment from Jim Roskind (QUIC architect)](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
@@ -593,18 +597,18 @@ https://www.youtube.com/watch?v=mnvuqLipNhg
 
 逐个发送，收到确认后发送下一个，长时间无确认，会重发
 
-	问题:  
-	在网络差的情况下，发送发迟迟没有收到确认包，可能会重发原始包，但是接收方有可能收到两次发送的相同包，这种情况下，接收方不容易判断，接收到的第二包是新包，还是重发包。
-	
-	解决办法:  
-	对每个包前增加一个bit为，交替存储010101标志，如果接收到的包和上次收到包具有相同的头标志，则说明是重复包
+   问题:  
+   在网络差的情况下，发送发迟迟没有收到确认包，可能会重发原始包，但是接收方有可能收到两次发送的相同包，这种情况下，接收方不容易判断，接收到的第二包是新包，还是重发包。
+   
+   解决办法:  
+   对每个包前增加一个bit为，交替存储010101标志，如果接收到的包和上次收到包具有相同的头标志，则说明是重复包
 
 **后退N帧 ARQ（Go-Back-N ARQ）**
 
 按照窗口大小一次性发送，并且每个包添加序号；接收方，按照序号收包，发送确认，如果遇到乱序的则丢弃后续所有包。发送方再次从收到的确认包的最后一个的下一个开始发送数据
 
-	问题:
-	一次丢包后会造成多次重发包
+   问题:
+   一次丢包后会造成多次重发包
 
 **选择性重发/拒绝 ARQ (Selective Repeat/Reject ARQ）**
 
@@ -622,8 +626,8 @@ todo
 
 网络抖动的的定义：
 
-	定义1. 由于这种延迟的变化导致网络中数据分组到达速率的变化</br>
-	定义2. 接收端某个数据包到达时间间隔与平均数据包到达时间间隔之差定义为该数据包的延迟抖动
+   定义1. 由于这种延迟的变化导致网络中数据分组到达速率的变化</br>
+   定义2. 接收端某个数据包到达时间间隔与平均数据包到达时间间隔之差定义为该数据包的延迟抖动
 
 1. 自适应抖动缓冲区</br>
    缓冲区的大小随着网络的变化而变化，
@@ -656,7 +660,8 @@ todo
 
 
 ### RS 
-[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)
+[Reed Solomon纠删码](https://www.cnblogs.com/vc60er/p/4475026.html)<br>
+[rscode](http://rscode.sourceforge.net/)<br>
 
 
 ## 语音增强  
@@ -672,12 +677,12 @@ todo
 
 ## 视频编码器
 ### H.264/avc 
-[wiki - Advanced Video Coding](https://en.wikipedia.org/wiki/Advanced_Video_Coding)  
+[Wiki - Advanced Video Coding](https://en.wikipedia.org/wiki/Advanced_Video_Coding)  
 [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction/blob/master/README-cn.md)   
-[codec-h264](  https://www.freehacker.cn/media/codec-h264/)  
+[codec-h264](https://www.freehacker.cn/media/codec-h264/)  
 [rfc6184 - RTP Payload Format for H.264 Video](https://tools.ietf.org/html/rfc6184)  
 [rfc6190 - RTP Payload Format for Scalable Video Coding](https://tools.ietf.org/html/rfc6190)  
-<https://zhuanlan.zhihu.com/p/71928833>
+[视频和视频帧：H264编码格式整理](https://zhuanlan.zhihu.com/p/71928833)
 
 **编码过程**
 
@@ -697,10 +702,10 @@ todo
 - 转换   
 在我们得到残差块（预测分区-真实分区）之后，使用离散余弦变换（DCT），将像素块转换成频率系数块，丢弃部分高频部分 
 
-	离散余弦变换（DCT）的主要功能有：</br>
-	- 将像素块转换为相同大小的频率系数块。  
-	- 可逆的，也意味着你可以还原回像素。  
-	- 高频部分和低频部分是分离的，压缩能量，更容易消除空间冗余。  
+   离散余弦变换（DCT）的主要功能有：</br>
+   - 将像素块转换为相同大小的频率系数块。  
+   - 可逆的，也意味着你可以还原回像素。  
+   - 高频部分和低频部分是分离的，压缩能量，更容易消除空间冗余。  
 
 
 - 量化   
@@ -823,7 +828,7 @@ YCrCb颜色空间是YUV颜色空间缩放和编译版本，Y定义为具有8位�
 
 ### opus 
 Opus是一个混合编码器，由SILK和CELT两种编码器混合而成，SILK主要负责wideband(8khz)以下的语音编码，CELT主要负责高频编码，如音乐等。    
-[wiki - Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
+[Wiki - Opus (audio format)](https://en.wikipedia.org/wiki/Opus_(audio_format))  
 [RFC7587 - RTP Payload Format for the Opus Speech and Audio Codec](https://tools.ietf.org/html/rfc7587)  
 [RFC6716 - Definition of the Opus Audio Codec](https://tools.ietf.org/html/rfc6716)  
 
